@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "strict": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "outDir": "web_modules/note-taker",
+    "rootDir": "src",
+    "paths": {
+      "/react.js": ["node_modules/@types/react"],
+      "/react-dom.js": ["node_modules/@types/react-dom"],
+      "/@material-ui/core.js": ["node_modules/@material-ui/core"],
+      "/@material-ui/icons.js": ["node_modules/@material-ui/icons"],
+      "/@material-ui/pickers.js": ["node_modules/@material-ui/pickers"],
+      "/@date-io/luxon.js": ["node_modules/@date-io/luxon"],
+      "/luxon.js": ["node_modules/@types/luxon"],
+      "/marked.js": ["node_modules/@types/marked"],
+      "/prismjs.js": ["node_modules/@types/prismjs"],
+      "/mobx.js": ["node_modules/mobx"],
+      "/mobx-react.js": ["node_modules/mobx-react"],
+    }
+  }
+}

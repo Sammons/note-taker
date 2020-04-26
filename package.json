@@ -1,0 +1,46 @@
+{
+  "scripts": {
+    "sp": "snowpack",
+    "sp-prod": "snowpack --optimize",
+    "servor": "servor web_modules ../index.html --reload",
+    "publish": "aws s3 cp ./web_modules s3://sammons-io-note-taker/ --acl public-read --recursive && aws s3 cp ./index.html s3://sammons-io-note-taker/ --acl public-read"
+  },
+  "devDependencies": {
+    "@types/highlight.js": "^9.12.3",
+    "@types/luxon": "^1.22.0",
+    "@types/marked": "^0.7.4",
+    "@types/prismjs": "^1.16.0",
+    "@types/react-dom": "^16.9.6",
+    "servor": "^3.2.0",
+    "snowpack": "^1.7.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "@date-io/luxon": "^1.*.*",
+    "@material-ui/core": "^4.9.11",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/pickers": "^3.2.10",
+    "luxon": "^1.23.0",
+    "marked": "^1.0.0",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.2.2",
+    "prismjs": "^1.20.0",
+    "react": "npm:@pika/react",
+    "react-dom": "npm:@pika/react-dom",
+    "styled-components": "^5.1.0"
+  },
+  "snowpack": {
+    "webDependencies": [
+      "react",
+      "react-dom",
+      "@material-ui/core",
+      "@material-ui/icons",
+      "@material-ui/pickers",
+      "@date-io/luxon",
+      "luxon",
+      "marked",
+      "prismjs",
+      "prismjs/themes/prism.css"
+    ]
+  }
+}

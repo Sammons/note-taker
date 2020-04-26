@@ -1,0 +1,23 @@
+import { createMuiTheme } from '/@material-ui/core.js';
+import {colors, responsiveFontSizes} from '/@material-ui/core.js';
+
+export const NoteTakerTheme = responsiveFontSizes(createMuiTheme({
+  palette: {
+    primary: colors.purple,
+    secondary: colors.green,
+  },
+  typography: {
+    fontFamily: 'Helvetica Neue'
+  },
+  props: {
+    MuiCard: {
+      raised: true
+    },
+    MuiAppBar: {
+      position: 'sticky',
+    },
+    MuiContainer: {
+      disableGutters: true
+    }
+  }
+}));
