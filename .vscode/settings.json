@@ -7,5 +7,11 @@
     "**/.DS_Store": true,
     "node_modules/**/*": true,
     "web_modules/*": false
-  }
+  },
+  "typescript.tsserver.maxTsServerMemory": 8192,
+  "typescript.tsserver.watchOptions": {
+    "watchDirectory": "fixedPollingInterval",
+    "fallbackPolling": "dynamicPriorityPolling"
+  },
+  "typescript.tsserver.useSeparateSyntaxServer": true
 }

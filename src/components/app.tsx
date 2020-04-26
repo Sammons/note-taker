@@ -1,6 +1,6 @@
 import React, { Fragment } from '/react.js'
-import { Container, Paper, ThemeProvider, Card, CardHeader, AppBar, Toolbar, IconButton, Drawer, Button, List, Divider, ListItem, ListItemIcon, ListItemText, styled, makeStyles } from '/@material-ui/core.js'
-import { Menu, Note, Settings, Save, Edit, SpaceBar } from '/@material-ui/icons.js'
+import { Container, Paper, ThemeProvider, Card, CardHeader, AppBar, Toolbar, IconButton, Drawer, Button, List, Divider, ListItem, ListItemIcon, ListItemText, styled, makeStyles, CardContent, Typography } from '/@material-ui/core.js'
+import { Menu, Note, Settings, Save, Edit, SpaceBar, Home, Info } from '/@material-ui/icons.js'
 import { MuiPickersUtilsProvider } from '/@material-ui/pickers.js'
 import { NoteTakerTheme } from '../lib/theme.js'
 import { MakeStateful, MakeCapturablyStateful, SnapshotCapturableState } from '../lib/state-maker.js';
@@ -25,9 +25,32 @@ const Editor = () => {
   </Fragment>
 }
 
+const About = () => {
+  return <Fragment>
+    <Card>
+      <CardHeader title={"About note-taker"}></CardHeader>
+      <CardContent>
+        <Typography>
+          This is an application built by Ben Sammons in 2020 as a proof of concept for his own use. It is not commercial grade product.
+        </Typography>
+        <Typography>
+          Proof of concepting what exactly? 
+        </Typography>
+        <Typography>
+          Using Snowpack, React, TypeScript, Material UI, MobX, in coordination with some newish web tech.
+        </Typography>
+        <Typography>
+          This lets me try out neat caching techniques, neat patterns with state management, neat patterns with simple theming, and some serverless interactions with a backend with zero onboarding system via AWS api keys.
+        </Typography>
+      </CardContent>
+    </Card>
+  </Fragment>
+}
+
 const MainContainerNavigationMap = {
   'dashboard': Dashboard,
-  'md-editor': Editor
+  'md-editor': Editor,
+  'about': About
 } as const;
 
 const MainContainer = MakeCapturablyStateful(
@@ -48,17 +71,22 @@ const leftNavSelection = (target: keyof typeof MainContainerNavigationMap) => {
 
 const navConfig = [
   {
-    name: "Create Note",
+    name: "Home",
+    icon: Home,
+    selection: 'dashboard'
+  },
+  {
+    name: "About",
+    icon: Info,
+    selection: "about"
+  }
+  {
+    name: "MD Editor",
     icon: Edit,
     selection: 'md-editor'
   },
   {
-    name: "Create Todo",
-    icon: Edit,
-    selection: 'md-editor'
-  },
-  {
-    name: "Grocery List",
+    name: "Checklist Editor",
     icon: Edit,
     selection: 'md-editor'
   },
