@@ -33,11 +33,12 @@
     "webDependencies": [
       "react",
       "react-dom",
+      "mobx",
+      "mobx-react",
       "@material-ui/core",
       "@material-ui/icons",
       "@material-ui/pickers",
       "@date-io/luxon",
-      "luxon",
       "marked",
       "prismjs",
       "prismjs/themes/prism.css"

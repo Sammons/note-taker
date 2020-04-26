@@ -79,7 +79,7 @@ const navConfig = [
     name: "About",
     icon: Info,
     selection: "about"
-  }
+  },
   {
     name: "MD Editor",
     icon: Edit,
