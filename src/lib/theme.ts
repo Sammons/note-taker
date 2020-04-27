@@ -7,7 +7,7 @@ export const NoteTakerTheme = responsiveFontSizes(createMuiTheme({
     secondary: colors.green,
   },
   typography: {
-    fontFamily: 'Helvetica Neue'
+    fontFamily: '"Helvetica Neue", "Raleway"'
   },
   props: {
     MuiCard: {
@@ -18,6 +18,9 @@ export const NoteTakerTheme = responsiveFontSizes(createMuiTheme({
     },
     MuiContainer: {
       disableGutters: true
+    },
+    MuiTypography: {
+      gutterBottom: true
     }
   }
 }));

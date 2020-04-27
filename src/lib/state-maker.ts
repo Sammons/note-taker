@@ -1,4 +1,4 @@
-import {observable} from '/mobx.js'
+import {observable, observe} from '/mobx.js'
 import {observer} from '/mobx-react.js'
 import { ReactElement, Component } from '/react.js'
 
@@ -18,7 +18,7 @@ export const MakeState = <T>(defaultState: T) => {
 }
 
 export const MakeStateful = <T, P>(defaultState: T, hoc: HoC<P>) => {
-  const state = MakeState(defaultState);
+  const state = MakeState<T>(defaultState);
   const observerHoc = state.makeObserver(hoc as HoC<unknown>) as HoC<P> & { state: typeof state['state'] };
   observerHoc.state = state.state;
   return observerHoc;
@@ -26,9 +26,21 @@ export const MakeStateful = <T, P>(defaultState: T, hoc: HoC<P>) => {
 
 // these will be captured when snapshot runs
 export const MakeCapturablyStateful = <T, P>(captureKey: string, defaultState: T, hoc: HoC<P>) => {
-  const state = MakeState({ ...defaultState, ...captures[captureKey] });
+  const state = MakeState<T>({ ...defaultState, ...captures[captureKey] });
   captureDefaults[captureKey] = defaultState;
   captures[captureKey] = state.state;
+  const observerHoc = state.makeObserver(hoc as HoC<unknown>) as HoC<P> & { state: T };
+  observerHoc.state = state.state;
+  return observerHoc;
+}
+
+export const MakeLocalStorageStateful = <T, P>(captureKey: string, defaultState: T, hoc: HoC<P>) => {
+  const currentLocalStorageString = localStorage.getItem(captureKey)
+  const data = currentLocalStorageString ? JSON.parse(currentLocalStorageString) : {};
+  const state = MakeState<T>({ ...defaultState, ...data });
+  observe(state.state, () => {
+    localStorage.setItem(captureKey, JSON.stringify(state.state));
+  });
   const observerHoc = state.makeObserver(hoc as HoC<unknown>) as HoC<P> & { state: T };
   observerHoc.state = state.state;
   return observerHoc;

@@ -1,11 +1,13 @@
 import React, { Fragment } from '/react.js'
 import { Container, Paper, ThemeProvider, Card, CardHeader, AppBar, Toolbar, IconButton, Drawer, Button, List, Divider, ListItem, ListItemIcon, ListItemText, styled, makeStyles, CardContent, Typography } from '/@material-ui/core.js'
-import { Menu, Note, Settings, Save, Edit, SpaceBar, Home, Info } from '/@material-ui/icons.js'
+import { Menu, Note, Settings as SettingsIcon, Save, Edit, SpaceBar, Home, Info } from '/@material-ui/icons.js'
 import { MuiPickersUtilsProvider } from '/@material-ui/pickers.js'
 import { NoteTakerTheme } from '../lib/theme.js'
 import { MakeStateful, MakeCapturablyStateful, SnapshotCapturableState } from '../lib/state-maker.js';
 import { MdEditor } from './md-editor.js';
 import LuxonMuiAdapter from '/@date-io/luxon.js'
+import { Settings } from '../components/settings.js'
+import {LoadingBar} from '../components/loading-bar.js';
 
 const styles = makeStyles({
   fullList: {
@@ -15,7 +17,12 @@ const styles = makeStyles({
 
 const Dashboard = () => {
   return <Card>
-    <CardHeader title={"Hello World"} />
+    <CardHeader title={"Welcome"} />
+    <CardContent>
+      <Typography>
+        Relevant details will appear as they become available
+      </Typography>
+    </CardContent>
   </Card>;
 };
 
@@ -50,7 +57,8 @@ const About = () => {
 const MainContainerNavigationMap = {
   'dashboard': Dashboard,
   'md-editor': Editor,
-  'about': About
+  'about': About,
+  'settings': Settings
 } as const;
 
 const MainContainer = MakeCapturablyStateful(
@@ -60,7 +68,7 @@ const MainContainer = MakeCapturablyStateful(
   },
   () => {
     const Target = MainContainerNavigationMap[MainContainer.state.target];
-    return <Container>
+    return <Container disableGutters={true} style={{padding: NoteTakerTheme.spacing(1)}}>
       <Target />
     </Container>
   });
@@ -96,15 +104,20 @@ const LeftNav = MakeStateful({
   open: false,
   toggleDrawer: () => {
     LeftNav.state.open = !LeftNav.state.open;
+  },
+  navigate: (target: keyof typeof MainContainerNavigationMap) => {
+      MainContainer.state.target = target;
+      LeftNav.state.toggleDrawer();
+      SnapshotCapturableState();
   }
 }, () => {
   const classes = styles();
   return <Fragment>
     <Drawer anchor={'left'} open={LeftNav.state.open} onClose={LeftNav.state.toggleDrawer}>
       <List className={classes.fullList} role="presentation" >
-        <ListItem button>
+        <ListItem button onClick={() => LeftNav.state.navigate("settings")}>
           <ListItemIcon>
-            <Settings />
+            <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary={"Settings"} />
         </ListItem>
@@ -112,11 +125,7 @@ const LeftNav = MakeStateful({
       <Divider />
       <List>
         {navConfig.map(C => (
-          <ListItem button onClick={() => {
-            MainContainer.state.target = C.selection;
-            LeftNav.state.toggleDrawer();
-            SnapshotCapturableState();
-          }}>
+          <ListItem button onClick={() => LeftNav.state.navigate(C.selection)}>
           <ListItemIcon>
               <C.icon />
             </ListItemIcon>
@@ -138,6 +147,7 @@ export const App = () => {
         </IconButton>
       </Toolbar>
     </AppBar>
+    <LoadingBar />
     <LeftNav />
     <MainContainer />
     </MuiPickersUtilsProvider>

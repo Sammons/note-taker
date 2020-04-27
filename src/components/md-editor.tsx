@@ -96,55 +96,60 @@ export class MdEditor extends Component<{}, {
 
   render() {
     return <Fragment>
-      {this.state.showDate && <DatePicker open={true} value={null}
-        style={{transition: 'none'}}
-        onChange={(e) => { this.pick = e?.toLocaleString(); }}
-        onAccept={() => { this.setState({ showDate: false }); }}
-        onClose={() => {
-          this.setState({ showDate: false });
-          this.injectTextDelayed();
-        }}
-      />}
-      {this.state.showTime && <DateTimePicker open={true} value={null}
-        style={{transition: 'none'}}
-        onChange={(e) => { 
-          if (!e) {
-            return;
-          }
-          this.pick = `${e.toLocaleString()} at ${e.toJSDate().toLocaleTimeString().replace(/(\d+:\d+):\d+/, "$1")}`;
-        }}
-        onAccept={() => { this.setState({ showTime: false }); }}
-        onClose={() => {
-          this.setState({ showTime: false });
-          this.injectTextDelayed();
-        }}
-      />}
-      <Grid container direction="row" justify="center" style={{ margin: '0px', width: '100%' }}>
-        <Grid item xs={10}>
-          <ThemeProvider theme={createMuiTheme({ typography: { fontFamily: 'Courier' } })}>
-            <TextField
-              ref={this.textInput as React.RefObject<HTMLDivElement>}
-              label="Markdown"
-              style={{ width: '100%' }}
-              multiline
-              rowsMax={30}
-              variant="filled"
-              placeholder="Enter note"
-              onChange={this.textChange as React.ChangeEventHandler}
-              onClick={this.textChange as React.MouseEventHandler}
-            />
-          </ThemeProvider>
-          <MdHolder id={this.mdId} />
+        {this.state.showDate && <DatePicker open={true} value={null}
+          style={{ transition: 'none' }}
+          onChange={(e) => { this.pick = e?.toLocaleString(); }}
+          onAccept={() => { this.setState({ showDate: false }); }}
+          onClose={() => {
+            this.setState({ showDate: false });
+            this.injectTextDelayed();
+          }}
+        />}
+        {this.state.showTime && <DateTimePicker open={true} value={null}
+          style={{ transition: 'none' }}
+          onChange={(e) => {
+            if (!e) {
+              return;
+            }
+            this.pick = `${e.toLocaleString()} at ${e.toJSDate().toLocaleTimeString().replace(/(\d+:\d+):\d+/, "$1")}`;
+          }}
+          onAccept={() => { this.setState({ showTime: false }); }}
+          onClose={() => {
+            this.setState({ showTime: false });
+            this.injectTextDelayed();
+          }}
+        />}
+        <Grid container direction="row">
+          <Grid item xs={10}>
+            <ThemeProvider theme={createMuiTheme({ typography: { fontFamily: 'Courier' } })}>
+              <TextField
+                ref={this.textInput as React.RefObject<HTMLDivElement>}
+                label="Markdown"
+                fullWidth
+                multiline
+                rowsMax={30}
+                variant="filled"
+                onChange={this.textChange as React.ChangeEventHandler}
+                onClick={this.textChange as React.MouseEventHandler}
+              />
+            </ThemeProvider>
+            <MdHolder id={this.mdId} />
+          </Grid>
+          <Grid item xs={2}>
+            <Grid container direction="column" justify={"center"} alignItems={"center"}>
+              <Grid item>
+              <Fab onClick={() => { this.setState({ showDate: !this.state.showDate }) }}>
+                <DateRangeOutlined />
+              </Fab>
+              </Grid>
+              <Grid item>
+              <Fab style={{ marginTop: NoteTakerTheme.spacing(2) }} onClick={() => { this.setState({ showTime: !this.state.showTime }) }}>
+                <WatchOutlined />
+              </Fab>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <Fab onClick={() => { this.setState({ showDate: !this.state.showDate }) }}>
-            <DateRangeOutlined />
-          </Fab>
-          <Fab style={{ marginTop: NoteTakerTheme.spacing(2) }} onClick={() => { this.setState({ showTime: !this.state.showTime }) }}>
-            <WatchOutlined />
-          </Fab>
-        </Grid>
-      </Grid>
     </Fragment>
   }
 }
