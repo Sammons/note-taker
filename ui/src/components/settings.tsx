@@ -14,9 +14,15 @@ export const Settings = MakeLocalStorageStateful('settings', {
         <Card>
           <CardHeader title={"Global Config"} />
           <CardContent>
-            <Grid container direction={"row"} alignItems={'flex-end'} spacing={1}>
-              <Grid item>
+            <Grid container
+             direction={"row"}
+             alignItems={'flex-start'} 
+             justify={'space-between'}
+             spacing={1}
+             >
+              <Grid item xs={8}>
               <TextField label={"link shrink aws api key"} 
+              fullWidth={true}
               defaultValue={Settings.state.linkShrinkApiKey}
               onChange={(e) => {
                 const val = e?.target?.value;
@@ -27,7 +33,10 @@ export const Settings = MakeLocalStorageStateful('settings', {
                 });
               }}
               />
+              </Grid>
+              <Grid item xs={8}>
               <TextField label={"notes aws api key"} 
+              fullWidth={true}
               defaultValue={Settings.state.notesApiKey}
               onChange={(e) => {
                 const val = e?.target?.value;

@@ -3,12 +3,17 @@ import { Settings } from "../components/settings.js";
 
 export class LinkShrinkClient {
   async shrink(destination: string) {
-    const result = await fetch(`${Config.linkShrinkDomain}/${destination}`, {
+    const headers = new Headers();
+    if (Settings.state.linkShrinkApiKey) {
+      headers.set('x-api-key', Settings.state.linkShrinkApiKey);
+    }
+    const result = await fetch(`${Config.linkShrinkDomain}`, {
       method: "POST",
       credentials: "omit",
-      headers: {
-        'x-api-key': Settings.state.linkShrinkApiKey
-      }
+      headers: headers,
+      body: JSON.stringify({
+        value: encodeURIComponent(destination)
+      })
     });
     const body = await result.json() as { value: string } | { message: string };
     if (result.status == 200) {

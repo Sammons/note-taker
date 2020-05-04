@@ -7,7 +7,9 @@ import { MakeStateful, MakeCapturablyStateful, SnapshotCapturableState } from '.
 import { MdEditor } from './md-editor.js';
 import LuxonMuiAdapter from '/@date-io/luxon.js'
 import { Settings } from '../components/settings.js'
-import {LoadingBar} from '../components/loading-bar.js';
+import { LoadingBar } from '../components/loading-bar.js';
+import { NotesClient } from '../clients/notes.js'
+import {observer} from '/mobx-react.js';
 
 const styles = makeStyles({
   fullList: {
@@ -26,11 +28,32 @@ const Dashboard = () => {
   </Card>;
 };
 
-const Editor = () => {
+const Editor = observer(() => {
+  const currentNoteName = MainContainer.state.currentNote;
+  console.log(MainContainer.state.currentNote, MainContainer.state.currentNoteValue)
+  if (!MainContainer.state.currentNoteValue && currentNoteName) {
+    LoadingBar.state.enqueue(async () => {
+      MainContainer.state.fetchingNote = true
+      await new NotesClient().get(currentNoteName).then((res) => {
+        console.log(res)
+        if (res && MainContainer.state.currentNoteValue != res) {
+          MainContainer.state.currentNoteValue = res
+        }
+      }).catch(e => console.log(e))
+      MainContainer.state.fetchingNote = false
+    })
+  }
   return <Fragment>
-      <MdEditor />
+    <MdEditor
+      noteName={MainContainer.state.currentNote}
+      noteValue={MainContainer.state.currentNoteValue}
+      setNoteName={noteName => {
+        console.log('changing current note:', noteName)
+        MainContainer.state.currentNote = noteName
+        SnapshotCapturableState();
+      }} />
   </Fragment>
-}
+})
 
 const About = () => {
   return <Fragment>
@@ -41,7 +64,7 @@ const About = () => {
           This is an application built by Ben Sammons in 2020 as a proof of concept for his own use. It is not commercial grade product.
         </Typography>
         <Typography>
-          Proof of concepting what exactly? 
+          Proof of concepting what exactly?
         </Typography>
         <Typography>
           Using Snowpack, React, TypeScript, Material UI, MobX, in coordination with some newish web tech.
@@ -64,11 +87,14 @@ const MainContainerNavigationMap = {
 const MainContainer = MakeCapturablyStateful(
   'main',
   {
-     target: 'dashboard' as keyof typeof MainContainerNavigationMap,
+    target: 'dashboard' as keyof typeof MainContainerNavigationMap,
+    currentNote: null as string | null,
+    currentNoteValue: null as string | null,
+    fetchingNote: false
   },
   () => {
     const Target = MainContainerNavigationMap[MainContainer.state.target];
-    return <Container disableGutters={true} style={{padding: NoteTakerTheme.spacing(1)}}>
+    return <Container disableGutters={true} style={{ padding: NoteTakerTheme.spacing(1) }}>
       <Target />
     </Container>
   });
@@ -106,9 +132,9 @@ const LeftNav = MakeStateful({
     LeftNav.state.open = !LeftNav.state.open;
   },
   navigate: (target: keyof typeof MainContainerNavigationMap) => {
-      MainContainer.state.target = target;
-      LeftNav.state.toggleDrawer();
-      SnapshotCapturableState();
+    MainContainer.state.target = target;
+    LeftNav.state.toggleDrawer();
+    SnapshotCapturableState();
   }
 }, () => {
   const classes = styles();
@@ -126,7 +152,7 @@ const LeftNav = MakeStateful({
       <List>
         {navConfig.map(C => (
           <ListItem button onClick={() => LeftNav.state.navigate(C.selection)}>
-          <ListItemIcon>
+            <ListItemIcon>
               <C.icon />
             </ListItemIcon>
             <ListItemText primary={C.name} />
@@ -140,16 +166,16 @@ const LeftNav = MakeStateful({
 export const App = () => {
   return <ThemeProvider theme={NoteTakerTheme}>
     <MuiPickersUtilsProvider utils={LuxonMuiAdapter}>
-    <AppBar >
-      <Toolbar>
-        <IconButton onClick={LeftNav.state.toggleDrawer}>
-          <Menu />
-        </IconButton>
-      </Toolbar>
-    </AppBar>
-    <LoadingBar />
-    <LeftNav />
-    <MainContainer />
+      <AppBar >
+        <Toolbar>
+          <IconButton onClick={LeftNav.state.toggleDrawer}>
+            <Menu />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <LoadingBar />
+      <LeftNav />
+      <MainContainer />
     </MuiPickersUtilsProvider>
   </ThemeProvider>
 };

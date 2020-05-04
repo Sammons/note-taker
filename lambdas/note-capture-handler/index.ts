@@ -10,6 +10,9 @@ module.exports.handler = new LambdaHandler({
   version: '1.0',
   gen: true
 }).allowOrigins([200, 500], '*')
+.setsHeaders([200, 500, 404], {
+  'access-control-allow-origin': "*"
+})
 .respondsWithJsonObject(200, b => b.withBoolean('success'))
 .respondsWithJsonObject(500, b => b.withString('message'))
 .processesEventWith(async(event, _) => {
@@ -30,7 +33,7 @@ module.exports.handler = new LambdaHandler({
       values: [],
       createdAt: Date.now()
     };
-    if (element.values.reverse()[0]?.value == valueToSave) {
+    if (element.values.slice().reverse()[0]?.value == valueToSave) {
       return {
         statusCode: 200,
         body:{ success: true }

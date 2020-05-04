@@ -59,7 +59,7 @@ export const DeserializeCapturableState = (value: string) => {
     localStateKeys.forEach(localKey => {
       const value = capturedState[localKey];
       if (!captures[registeredStateKey]) { captures[registeredStateKey] = {} }
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && value != null) {
         Object.keys(value).forEach(k => {
           if (!captures[registeredStateKey]) { captures[registeredStateKey][localKey] = value.constructor.apply(); }
           captures[registeredStateKey][localKey][k] = value;
