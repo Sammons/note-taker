@@ -1,14 +1,13 @@
 import { Config } from "../config/client-config.js";
+import { Settings } from "../components/settings.js";
 
 export class LinkShrinkClient {
-  constructor(private apiKey: string) {}
-
   async shrink(destination: string) {
     const result = await fetch(`${Config.linkShrinkDomain}/${destination}`, {
       method: "POST",
       credentials: "omit",
       headers: {
-        'x-api-key': this.apiKey
+        'x-api-key': Settings.state.linkShrinkApiKey
       }
     });
     const body = await result.json() as { value: string } | { message: string };
