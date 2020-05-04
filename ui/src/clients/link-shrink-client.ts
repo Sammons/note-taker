@@ -17,7 +17,7 @@ export class LinkShrinkClient {
     });
     const body = await result.json() as { value: string } | { message: string };
     if (result.status == 200) {
-      return 'https://sammons.io/s/' + (body as { value: string }).value;
+      return 'https://link.sammons.io/s/' + (body as { value: string }).value;
     } else {
       throw new Error(`Failed to shrink link ${destination}: ${(body as {message: string}).message}`)
     }

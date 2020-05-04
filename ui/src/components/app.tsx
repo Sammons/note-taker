@@ -3,13 +3,13 @@ import { Container, Paper, ThemeProvider, Card, CardHeader, AppBar, Toolbar, Ico
 import { Menu, Note, Settings as SettingsIcon, Save, Edit, SpaceBar, Home, Info } from '/@material-ui/icons.js'
 import { MuiPickersUtilsProvider } from '/@material-ui/pickers.js'
 import { NoteTakerTheme } from '../lib/theme.js'
-import { MakeStateful, MakeCapturablyStateful, SnapshotCapturableState } from '../lib/state-maker.js';
+import { MakeStateful, MakeCapturablyStateful, SnapshotCapturableState, MakeLocalStorageStateful } from '../lib/state-maker.js';
 import { MdEditor } from './md-editor.js';
 import LuxonMuiAdapter from '/@date-io/luxon.js'
 import { Settings } from '../components/settings.js'
 import { LoadingBar } from '../components/loading-bar.js';
-import { NotesClient } from '../clients/notes.js'
 import {observer} from '/mobx-react.js';
+import { Notes } from '../clients/notes.js'
 
 const styles = makeStyles({
   fullList: {
@@ -29,29 +29,15 @@ const Dashboard = () => {
 };
 
 const Editor = observer(() => {
-  const currentNoteName = MainContainer.state.currentNote;
-  console.log(MainContainer.state.currentNote, MainContainer.state.currentNoteValue)
-  if (!MainContainer.state.currentNoteValue && currentNoteName) {
-    LoadingBar.state.enqueue(async () => {
-      MainContainer.state.fetchingNote = true
-      await new NotesClient().get(currentNoteName).then((res) => {
-        console.log(res)
-        if (res && MainContainer.state.currentNoteValue != res) {
-          MainContainer.state.currentNoteValue = res
-        }
-      }).catch(e => console.log(e))
-      MainContainer.state.fetchingNote = false
-    })
-  }
+  const currentNoteName = MainContainer.state.currentNote || `note ${new Date().toLocaleDateString()}`;
   return <Fragment>
     <MdEditor
-      noteName={MainContainer.state.currentNote}
-      noteValue={MainContainer.state.currentNoteValue}
+      noteName={currentNoteName}
       setNoteName={noteName => {
-        console.log('changing current note:', noteName)
         MainContainer.state.currentNote = noteName
         SnapshotCapturableState();
-      }} />
+      }}
+      />
   </Fragment>
 })
 
@@ -88,9 +74,7 @@ const MainContainer = MakeCapturablyStateful(
   'main',
   {
     target: 'dashboard' as keyof typeof MainContainerNavigationMap,
-    currentNote: null as string | null,
-    currentNoteValue: null as string | null,
-    fetchingNote: false
+    currentNote: null as string | null
   },
   () => {
     const Target = MainContainerNavigationMap[MainContainer.state.target];

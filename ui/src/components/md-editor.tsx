@@ -1,13 +1,16 @@
 import React, { Component, Fragment, ChangeEvent, KeyboardEventHandler } from '/react.js';
 import marked from '/marked.js'
 import prism from '/prismjs.js'
-import { TextField, makeStyles, createMuiTheme, ThemeProvider, IconButton, Fab, Container, Grid } from '/@material-ui/core.js';
-import { DateRangeOutlined, TimelapseOutlined, WatchOutlined, SaveOutlined } from '/@material-ui/icons.js';
+import { TextField, makeStyles, createMuiTheme, ThemeProvider, IconButton, Fab, Container, Grid, Modal, Card, Dialog, DialogContent } from '/@material-ui/core.js';
+import { DateRangeOutlined, TimelapseOutlined, WatchOutlined, SaveOutlined, ShareOutlined, CloudUploadOutlined, CloudDownloadOutlined } from '/@material-ui/icons.js';
 import { NoteTakerTheme } from '../lib/theme.js';
 import { Clock, DatePicker, DateTimePicker } from '/@material-ui/pickers.js';
 import { LoadingBar } from "../components/loading-bar.js"
 import { DebouncedEventHandler } from '../lib/debouncer.js';
-import { NotesClient } from '../clients/notes.js';
+import { NotesClient } from '../clients/notes-client.js';
+import { Notes } from '../clients/notes.js';
+import { when } from '/mobx.js';
+import { observer } from '/mobx-react.js';
 
 marked.setOptions({
   highlight: function (code, language) {
@@ -31,15 +34,16 @@ const MdHolder = ({ id }: { id: string }) => {
 }
 
 let counter = 0;
+@observer
 export class MdEditor extends Component<{
   setNoteName: (name: string) => void | Promise<void>;
-  noteName?: string | null;
-  noteValue?: string | null; 
+  noteName?: string;
 }, {
   showDate: boolean;
   showTime: boolean;
   name: string;
   saving: boolean;
+  sharemodal: boolean;
 }> {
   deflector: null | NodeJS.Timeout = null;
   mdId = `md-id-${String(counter++)}`;
@@ -52,8 +56,9 @@ export class MdEditor extends Component<{
     this.state = {
       showDate: false,
       showTime: false,
-      name: props.noteName || `note ${new Date().toLocaleDateString()}`,
-      saving: false
+      name: props.noteName || new Date().toLocaleDateString(),
+      saving: false,
+      sharemodal: false
     }
   }
 
@@ -141,7 +146,6 @@ export class MdEditor extends Component<{
             const value = e.target.value;
             DebouncedEventHandler('md-note-name', () => {
               this.setState({name: value})
-              this.props.setNoteName(value);
             });
           }}
           fullWidth />
@@ -155,7 +159,7 @@ export class MdEditor extends Component<{
                   label="Markdown"
                   fullWidth
                   multiline
-                  defaultValue={this.props.noteValue}
+                  defaultValue={Notes.getNote(this.props.noteName)}
                   rowsMax={30}
                   variant="filled"
                   onChange={this.textChange as React.ChangeEventHandler}
@@ -165,19 +169,19 @@ export class MdEditor extends Component<{
               <MdHolder id={this.mdId} />
             </Grid>
             <Grid item xs={2}>
-              <Grid container direction="column" justify={"center"} alignItems={"center"}>
+              <Grid container direction="column" justify={"center"} alignItems={"center"} spacing={2}>
                 <Grid item>
                   <Fab onClick={() => { this.setState({ showDate: !this.state.showDate }) }}>
                     <DateRangeOutlined />
                   </Fab>
                 </Grid>
                 <Grid item>
-                  <Fab style={{ marginTop: NoteTakerTheme.spacing(2) }} onClick={() => { this.setState({ showTime: !this.state.showTime }) }}>
+                  <Fab onClick={() => { this.setState({ showTime: !this.state.showTime }) }}>
                     <WatchOutlined />
                   </Fab>
                 </Grid>
                 <Grid item>
-                  <Fab style={{ marginTop: NoteTakerTheme.spacing(2) }} disabled={this.state.saving} onClick={() => {
+                  <Fab disabled={this.state.saving} onClick={() => {
                     LoadingBar.state.enqueue(async () => {
                       this.setState({saving: true})
                       await new NotesClient().save({
@@ -185,12 +189,37 @@ export class MdEditor extends Component<{
                       }, this.state.name).catch(e => {
                         console.log('failed to save note')
                       })
+                      this.props.setNoteName(this.state.name);
                       this.setState({saving: false})
                     })
                   }}>
                     <SaveOutlined />
                   </Fab>
                 </Grid>
+                <Grid item>
+                  <Fab disabled={this.state.saving} onClick={() => {
+                    LoadingBar.state.enqueue(async () => {
+                      this.props.setNoteName(this.state.name);
+                    })
+                  }}>
+                    <CloudDownloadOutlined />
+                  </Fab>
+                </Grid>
+                <Grid item>
+                  <Fab onClick={() => {
+                      this.setState({sharemodal: true});
+                      when(() => Boolean(Notes.genLink()), () => {
+                        this.setState({sharemodal: true})
+                      })
+                    }}>
+                    <ShareOutlined />
+                  </Fab>
+                </Grid>
+                {this.state.sharemodal && Notes.genLink() && <Dialog open={this.state.sharemodal} onClose={() => {this.setState({sharemodal: false})}} maxWidth={"md"} fullWidth>
+                  <DialogContent>
+                  <TextField defaultValue={Notes.genLink()} label={"Copy the link"} fullWidth/>
+                  </DialogContent>
+                </Dialog>}
               </Grid>
             </Grid>
           </Grid>
