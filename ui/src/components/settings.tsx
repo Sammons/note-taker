@@ -5,8 +5,8 @@ import { DebouncedEventHandler } from "../lib/debouncer.js"
 import { LoadingBar } from "../components/loading-bar.js"
 
 export const Settings = MakeLocalStorageStateful('settings', {
-  awsApiKey: '',
-  awsApiKeyValid: false
+  linkShrinkApiKey: '',
+  notesApiKey: ''
 }, () => {
   return <Fragment>
     <Grid container direction={"column"} spacing={1}>
@@ -16,13 +16,24 @@ export const Settings = MakeLocalStorageStateful('settings', {
           <CardContent>
             <Grid container direction={"row"} alignItems={'flex-end'} spacing={1}>
               <Grid item>
-              <TextField label={"aws api key"} 
-              defaultValue={Settings.state.awsApiKey}
+              <TextField label={"link shrink aws api key"} 
+              defaultValue={Settings.state.linkShrinkApiKey}
               onChange={(e) => {
                 const val = e?.target?.value;
-                DebouncedEventHandler('aws-api-key-change', () => {
+                DebouncedEventHandler('link-shrink-aws-api-key-change', () => {
                   if (val != null) {
-                    Settings.state.awsApiKey = val.trim();
+                    Settings.state.linkShrinkApiKey = val.trim();
+                  }
+                });
+              }}
+              />
+              <TextField label={"notes aws api key"} 
+              defaultValue={Settings.state.notesApiKey}
+              onChange={(e) => {
+                const val = e?.target?.value;
+                DebouncedEventHandler('notes-aws-api-key-change', () => {
+                  if (val != null) {
+                    Settings.state.notesApiKey = val.trim();
                   }
                 });
               }}

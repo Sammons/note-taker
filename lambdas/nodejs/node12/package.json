@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "lambda-toolkit-api-composer": "^0.0.16",
+    "lambda-toolkit-utilities": "1.2.17"
+  }
+}

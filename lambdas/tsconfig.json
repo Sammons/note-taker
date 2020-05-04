@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "rootDirs": [
+      "note-capture-handler",
+      "note-lookup-handler",
+      "nodejs/node12"
+    ],
+    "outDir": "built",
+    "target": "es2018",
+    "module": "CommonJS",
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "lib": ["ES2018"],
+    "paths": {
+      "*": [
+        "*",
+        "nodejs/node12/node_modules/*"
+      ]
+    }
+  },
+}

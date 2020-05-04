@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "prep": "cd nodejs/node12 && yarn && cd - && zip layer -r nodejs && tsc -p . && cd built/note-lookup-handler && zip handler -r . && cd - && cd built/note-capture-handler && zip handler -r . && cd ../.. && cp built/note-capture-handler/handler.zip writehandler.zip && cp built/note-lookup-handler/handler.zip readhandler.zip",
+    "layer": "aws lambda publish-layer-version --region=us-east-1 --layer-name note-base --compatible-runtimes nodejs12.x --license-info MIT --zip-file fileb://layer.zip",
+    "apply-layer-write": "aws lambda update-function-configuration --region=us-east-1 --function-name note-capture --layers arn:aws:lambda:us-east-1:122302178739:layer:note-base:2",
+    "apply-layer-read": "aws lambda update-function-configuration --region=us-east-1 --function-name note-lookup --layers arn:aws:lambda:us-east-1:122302178739:layer:note-base:2",
+    "publish-handler-write": "aws lambda update-function-code --region=us-east-1 --function-name note-capture --zip-file fileb://writehandler.zip --publish",
+    "publish-handler-read": "aws lambda update-function-code --region=us-east-1 --function-name note-lookup --zip-file fileb://readhandler.zip --publish",
+    "apply-path-to-stage-mapping": "aws apigatewayv2 create-api-mapping --region=us-east-1 --domain-name='note-api.sammons.io' --api-id=6gk6drmy8b --stage=prod",
+    "test": "curl -X POST https://notes-api.sammons.io/notes -d '{\"name\": \"x\", \"note\":{}}'",
+    "test2": "curl -X GET https://notes-api.sammons.io/notes/x"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.663.0"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/node": "^13.13.4",
+    "typescript": "^3.8.3"
+  }
+}
