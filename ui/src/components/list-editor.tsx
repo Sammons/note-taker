@@ -106,7 +106,7 @@ const save = () => {
 const NoteListItem = (props: { idx: number; text: string; checked: boolean; }) => {
   return <Fragment>
     <ListItem dense>
-      <ListItemIcon>
+      <ListItemIcon style={{height: 26}}>
         <Typography>{props.idx}</Typography>
         <Checkbox edge="start"
           disableRipple
@@ -138,7 +138,7 @@ const NoteListArea = observer(() => {
   return <Grid container direction="row" spacing={2}>
 
     <Grid item xs={10}>
-      <List>
+      <List disablePadding dense>
         {ListEditorState.transient.localContent.elements.map((e, i) => {
           return <NoteListItem key={i} idx={i} checked={e.checked} text={e.text} />
         })}
@@ -191,7 +191,7 @@ const pushItem = () => {
   if (ListEditorState.transient.newEntryValue === "") {
     return;
   }
-  ListEditorState.transient.localContent.elements.push({
+  ListEditorState.transient.localContent.elements.unshift({
     checked: false,
     text: ListEditorState.transient.newEntryValue
   })
