@@ -56,7 +56,7 @@ const options = [
   "Ritz Crackers",
   "Root Beer",
   "Salsa - Mild",
-  "Tea"
+  "Tea",
   "Tostitos",
   "V8",
   "Watermelon",
