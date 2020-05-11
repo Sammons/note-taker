@@ -1,6 +1,6 @@
 import {observable, set, action, computed} from '/mobx.js';
 import { NotesClient } from './notes-client.js';
-import { LoadingBar } from '../components/loading-bar.js';
+import { LoadingBar, LoadingBarState } from '../components/loading-bar.js';
 import { LinkShrinkClient } from './link-shrink-client.js';
 
 
@@ -14,7 +14,7 @@ class _Notes {
   private start(key: string, deferable: () => Promise<any>): void {
     if (!this.inProgress[key]) {
       this.inProgress[key] = true;
-      LoadingBar.state.enqueue(async() => {
+      LoadingBarState.transient.enqueue(async() => {
         await deferable()
         .then(v => {
           this.state[key] = { timestamp: Date.now(), value: v };
@@ -37,11 +37,11 @@ class _Notes {
   }
 
 
-  getNote(note?: string|null, howStale?: number) {
+  getNote(note?: string|null) {
     if (!note) {
       return null;
     }
-    return this.getIfRecentOrLoad<string>(note, howStale ?? 1000, () => this.client.get(note));
+    return this.getIfRecentOrLoad<string>(note, 500, () => this.client.get(note));
   }
 
   genLink() {

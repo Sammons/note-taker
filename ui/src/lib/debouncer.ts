@@ -3,7 +3,7 @@ const bouncers = {} as {[key: string]: NodeJS.Timeout}
 
 type ExtractSingleArityFunctionParam<T> = T extends (arg: infer Arg) => any ? Arg : never
 
-export const DebouncedEventHandler = <T extends Function>(key: string, fun: T) => {
+export const Debounced = <T extends Function>(key: string, fun: T) => {
   const contingentError = new Error(`Failed to run debounced method: ${key}`);
   let val = bouncers[key];
   if (val) {

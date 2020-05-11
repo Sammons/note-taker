@@ -1,11 +1,11 @@
 import { Config } from "../config/client-config.js";
-import { Settings } from "../components/settings.js";
+import { Settings, SettingsState } from "../components/settings.js";
 
 export class NotesClient {
   async save(note: any, name: string) {
     const headers = new Headers();
-    if (Settings.state.notesApiKey) {
-      headers.set('x-api-key', Settings.state.notesApiKey);
+    if (SettingsState.stored.notesApiKey) {
+      headers.set('x-api-key', SettingsState.stored.notesApiKey);
     }
     const result = await fetch(`${Config.notesDomain}/notes`, {
       method: "POST",
@@ -23,10 +23,10 @@ export class NotesClient {
     }
   }
 
-  async get(name: string) {
+  async get<T=string>(name: string): Promise<T | null> {
     const headers = new Headers();
-    if (Settings.state.notesApiKey) {
-      headers.set('x-api-key', Settings.state.notesApiKey);
+    if (SettingsState.stored.notesApiKey) {
+      headers.set('x-api-key', SettingsState.stored.notesApiKey);
     }
     const result = await fetch(`${Config.notesDomain}/notes/${encodeURIComponent(name)}`, {
       method: "GET",
@@ -40,10 +40,10 @@ export class NotesClient {
         name: string;
       }
     }
-    if (result.status == 200) {
-      const lastResult = body.value?.values.pop()
-      if (lastResult) {
-        return JSON.parse(lastResult.value)?.text
+    if (result.status >= 200 && result.status < 300) {
+      const lastResult = body.value?.values.slice(-1)[0]
+      if (lastResult != null) {
+        return JSON.parse(lastResult.value) as T;
       }
     } 
     return null;

@@ -40,7 +40,6 @@ module.exports.handler = new LambdaHandler({
       } as const;
     }
     element.values.push({timestamp: Date.now(), value: valueToSave});
-    console.log('saving element', element)
     await notes.save([element])
     return {
       statusCode: 200,

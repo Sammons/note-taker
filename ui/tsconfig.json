@@ -16,6 +16,7 @@
       "/@material-ui/core.js": ["node_modules/@material-ui/core"],
       "/@material-ui/icons.js": ["node_modules/@material-ui/icons"],
       "/@material-ui/pickers.js": ["node_modules/@material-ui/pickers"],
+      "/@material-ui/lab.js": ["node_modules/@material-ui/lab"],
       "/@date-io/luxon.js": ["node_modules/@date-io/luxon"],
       "/luxon.js": ["node_modules/@types/luxon"],
       "/marked.js": ["node_modules/@types/marked"],

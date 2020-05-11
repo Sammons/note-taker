@@ -1,90 +1,46 @@
-import React, { Fragment } from '/react.js'
-import { Container, Paper, ThemeProvider, Card, CardHeader, AppBar, Toolbar, IconButton, Drawer, Button, List, Divider, ListItem, ListItemIcon, ListItemText, styled, makeStyles, CardContent, Typography } from '/@material-ui/core.js'
-import { Menu, Note, Settings as SettingsIcon, Save, Edit, SpaceBar, Home, Info } from '/@material-ui/icons.js'
+import React from '/react.js'
+import { Container, ThemeProvider, AppBar, Toolbar, IconButton, ListItem, ListItemIcon, ListItemText } from '/@material-ui/core.js'
+import { Menu, Edit, Home, Info } from '/@material-ui/icons.js'
 import { MuiPickersUtilsProvider } from '/@material-ui/pickers.js'
 import { NoteTakerTheme } from '../lib/theme.js'
-import { MakeStateful, MakeCapturablyStateful, SnapshotCapturableState, MakeLocalStorageStateful } from '../lib/state-maker.js';
+import { MakeStateful } from '../lib/state-maker.js';
 import { MdEditor } from './md-editor.js';
 import LuxonMuiAdapter from '/@date-io/luxon.js'
 import { Settings } from '../components/settings.js'
 import { LoadingBar } from '../components/loading-bar.js';
-import {observer} from '/mobx-react.js';
-import { Notes } from '../clients/notes.js'
-
-const styles = makeStyles({
-  fullList: {
-    width: '210px'
-  }
-});
-
-const Dashboard = () => {
-  return <Card>
-    <CardHeader title={"Welcome"} />
-    <CardContent>
-      <Typography>
-        Relevant details will appear as they become available
-      </Typography>
-    </CardContent>
-  </Card>;
-};
-
-const Editor = observer(() => {
-  const currentNoteName = MainContainer.state.currentNote || `note ${new Date().toLocaleDateString()}`;
-  return <Fragment>
-    <MdEditor
-      noteName={currentNoteName}
-      setNoteName={noteName => {
-        MainContainer.state.currentNote = noteName
-        SnapshotCapturableState();
-      }}
-      />
-  </Fragment>
-})
-
-const About = () => {
-  return <Fragment>
-    <Card>
-      <CardHeader title={"About note-taker"}></CardHeader>
-      <CardContent>
-        <Typography>
-          This is an application built by Ben Sammons in 2020 as a proof of concept for his own use. It is not commercial grade product.
-        </Typography>
-        <Typography>
-          Proof of concepting what exactly?
-        </Typography>
-        <Typography>
-          Using Snowpack, React, TypeScript, Material UI, MobX, in coordination with some newish web tech.
-        </Typography>
-        <Typography>
-          This lets me try out neat caching techniques, neat patterns with state management, neat patterns with simple theming, and some serverless interactions with a backend with zero onboarding system via AWS api keys.
-        </Typography>
-      </CardContent>
-    </Card>
-  </Fragment>
-}
+import { About } from './about.js'
+import { Dashboard } from './dashboard.js'
+import { LeftNav, LeftNavState } from './left-nav.js'
+import { NoteEditor } from './note-editor.js'
+import { ListEditor } from './list-editor.js'
 
 const MainContainerNavigationMap = {
   'dashboard': Dashboard,
-  'md-editor': Editor,
+  'md-editor': NoteEditor,
+  'list-editor': ListEditor,
   'about': About,
   'settings': Settings
 } as const;
 
-const MainContainer = MakeCapturablyStateful(
+const {
+  component: MainContainer,
+  state: MainContainerState
+} = MakeStateful(
   'main',
   {
-    target: 'dashboard' as keyof typeof MainContainerNavigationMap,
-    currentNote: null as string | null
+    target: 'dashboard' as keyof typeof MainContainerNavigationMap
   },
+  {},
+  {},
   () => {
-    const Target = MainContainerNavigationMap[MainContainer.state.target];
+    const Target = MainContainerNavigationMap[MainContainerState.nav.target || 'dashboard'];
     return <Container disableGutters={true} style={{ padding: NoteTakerTheme.spacing(1) }}>
       <Target />
     </Container>
   });
 
-const leftNavSelection = (target: keyof typeof MainContainerNavigationMap) => {
-  MainContainer.state.target = 'md-editor';
+const navigate = (selection: keyof typeof MainContainerNavigationMap) => {
+  MainContainerState.nav.target = selection || 'dashboard';
 }
 
 const navConfig = [
@@ -106,59 +62,36 @@ const navConfig = [
   {
     name: "Checklist Editor",
     icon: Edit,
-    selection: 'md-editor'
+    selection: 'list-editor'
   },
 ] as const
 
-const LeftNav = MakeStateful({
-  open: false,
-  toggleDrawer: () => {
-    LeftNav.state.open = !LeftNav.state.open;
-  },
-  navigate: (target: keyof typeof MainContainerNavigationMap) => {
-    MainContainer.state.target = target;
-    LeftNav.state.toggleDrawer();
-    SnapshotCapturableState();
-  }
-}, () => {
-  const classes = styles();
-  return <Fragment>
-    <Drawer anchor={'left'} open={LeftNav.state.open} onClose={LeftNav.state.toggleDrawer}>
-      <List className={classes.fullList} role="presentation" >
-        <ListItem button onClick={() => LeftNav.state.navigate("settings")}>
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Settings"} />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        {navConfig.map(C => (
-          <ListItem button onClick={() => LeftNav.state.navigate(C.selection)}>
-            <ListItemIcon>
-              <C.icon />
-            </ListItemIcon>
-            <ListItemText primary={C.name} />
-          </ListItem>
-        ))}
-      </List>
-    </Drawer>
-  </Fragment>
-});
+const toggleNav = () => {
+  LeftNavState.transient.open = !LeftNavState.transient.open;
+}
 
 export const App = () => {
   return <ThemeProvider theme={NoteTakerTheme}>
     <MuiPickersUtilsProvider utils={LuxonMuiAdapter}>
       <AppBar >
         <Toolbar>
-          <IconButton onClick={LeftNav.state.toggleDrawer}>
+          <IconButton onClick={toggleNav}>
             <Menu />
           </IconButton>
         </Toolbar>
       </AppBar>
       <LoadingBar />
-      <LeftNav />
+      <LeftNav navigate={navigate as (t: string) => void} items={navConfig.map(C => (
+        <ListItem button onClick={() => {
+          navigate(C.selection)
+          toggleNav()
+        }}>
+          <ListItemIcon>
+            <C.icon />
+          </ListItemIcon>
+          <ListItemText primary={C.name} />
+        </ListItem>
+      ))} />
       <MainContainer />
     </MuiPickersUtilsProvider>
   </ThemeProvider>

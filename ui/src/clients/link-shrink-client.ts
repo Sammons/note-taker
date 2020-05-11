@@ -1,11 +1,11 @@
 import { Config } from "../config/client-config.js";
-import { Settings } from "../components/settings.js";
+import { Settings, SettingsState } from "../components/settings.js";
 
 export class LinkShrinkClient {
   async shrink(destination: string) {
     const headers = new Headers();
-    if (Settings.state.linkShrinkApiKey) {
-      headers.set('x-api-key', Settings.state.linkShrinkApiKey);
+    if (SettingsState.stored.linkShrinkApiKey) {
+      headers.set('x-api-key', SettingsState.stored.linkShrinkApiKey);
     }
     const result = await fetch(`${Config.linkShrinkDomain}`, {
       method: "POST",

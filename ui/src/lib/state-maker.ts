@@ -1,56 +1,53 @@
-import {observable, observe} from '/mobx.js'
-import {observer} from '/mobx-react.js'
+import { observable, observe } from '/mobx.js'
+import { observer } from '/mobx-react.js'
 import { ReactElement, Component } from '/react.js'
+import {Debounced} from './debouncer.js';
 
 type HoC<P> = (props: P) => ReactElement
 
 const captures = {} as { [key: string]: any; }
 const captureDefaults = {} as { [key: string]: any; }
 
-export const MakeState = <T>(defaultState: T) => {
-  const state = observable(defaultState);
-  return {
-    state,
-    makeObserver: <P, T extends HoC<P>>(hoc: T): HoC<P> => {
-      return observer(hoc) as HoC<P>
-    }
-  }
-}
+export const MakeStateful = <HashNavState, LocalStorageState, TransientState, P = {}>(
+  key: string,
+  defaultNavState: HashNavState,
+  defaultLocalStorageState: LocalStorageState,
+  defaultTransientState: TransientState,
+  hoc: HoC<P & { nav: HashNavState; stored: LocalStorageState; transient: TransientState }>
+) => {
+  const curNavData = captures[key] ?? {};
+  const curLocalData = JSON.parse(localStorage.getItem(`component-${key}`) || "{}");
+  const nav = observable({ ...defaultNavState, ...curNavData } as HashNavState);
+  captures[key] = nav;
+  const stored = observable({ ...defaultLocalStorageState, ...curLocalData } as LocalStorageState);
+  const transient = observable({ ...defaultTransientState });
 
-export const MakeStateful = <T, P>(defaultState: T, hoc: HoC<P>) => {
-  const state = MakeState<T>(defaultState);
-  const observerHoc = state.makeObserver(hoc as HoC<unknown>) as HoC<P> & { state: typeof state['state'] };
-  observerHoc.state = state.state;
-  return observerHoc;
-}
-
-// these will be captured when snapshot runs
-export const MakeCapturablyStateful = <T, P>(captureKey: string, defaultState: T, hoc: HoC<P>) => {
-  const state = MakeState<T>({ ...defaultState, ...captures[captureKey] });
-  captureDefaults[captureKey] = defaultState;
-  captures[captureKey] = state.state;
-  const observerHoc = state.makeObserver(hoc as HoC<unknown>) as HoC<P> & { state: T };
-  observerHoc.state = state.state;
-  return observerHoc;
-}
-
-export const MakeLocalStorageStateful = <T, P>(captureKey: string, defaultState: T, hoc: HoC<P>) => {
-  const currentLocalStorageString = localStorage.getItem(captureKey)
-  const data = currentLocalStorageString ? JSON.parse(currentLocalStorageString) : {};
-  const state = MakeState<T>({ ...defaultState, ...data });
-  observe(state.state, () => {
-    localStorage.setItem(captureKey, JSON.stringify(state.state));
+  observe(stored, () => {
+    Debounced(`store-${key}`, () => {
+      localStorage.setItem(`component-${key}`, JSON.stringify(stored));
+    })
   });
-  const observerHoc = state.makeObserver(hoc as HoC<unknown>) as HoC<P> & { state: T };
-  observerHoc.state = state.state;
-  return observerHoc;
+  
+  observe(nav, () => {
+    Debounced(`hash`, () => {
+      UpdateHashWithState();
+    });
+  });
+
+  const wrappedReactHoC = observer((props: P) => {
+    return hoc({ ...props, nav, stored, transient })
+  });
+
+  return {
+    state: { nav, stored, transient },
+    component: wrappedReactHoC as (props: P) => JSX.Element
+  };
 }
 
-export const DeserializeCapturableState = (value: string) => {
+const DeserializeCapturableState = (value: string) => {
   if (!value) {
     return;
   }
-
   const loadedState = JSON.parse(atob(value));
   const registeredStateKeys = Object.keys(loadedState);
   registeredStateKeys.forEach(registeredStateKey => {
@@ -80,8 +77,14 @@ export const DeserializeCapturableState = (value: string) => {
   })
 }
 
-export const SnapshotCapturableState = () => {
-  window.location.hash = btoa(JSON.stringify(captures))
+export const UpdateHashWithState = () => {
+  const toCapture = {} as typeof captures;
+  Object.keys(captures).forEach(k => {
+    if (Object.keys(captures[k]).length > 0) {
+      toCapture[k] = captures[k];
+    }
+  })
+  window.location.hash = btoa(JSON.stringify(toCapture))
 }
 
 // parse data from the hash
