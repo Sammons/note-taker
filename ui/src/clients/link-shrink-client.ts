@@ -1,12 +1,10 @@
 import { Config } from "../config/client-config";
-import { Settings, SettingsState } from "../components/settings";
+import { ApiToken } from "./authorization";
 
 export class LinkShrinkClient {
   async shrink(destination: string) {
     const headers = new Headers();
-    if (SettingsState.stored.linkShrinkApiKey) {
-      headers.set('x-api-key', SettingsState.stored.linkShrinkApiKey);
-    }
+    headers.set('x-token', ApiToken());
     const result = await fetch(`${Config.linkShrinkDomain}`, {
       method: "POST",
       credentials: "omit",

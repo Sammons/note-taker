@@ -1,5 +1,6 @@
 import { Config } from "../config/client-config";
-import { Settings, SettingsState } from "../components/settings";
+import { SettingsState } from "../components/settings";
+import { ApiToken } from "./authorization";
 
 export class NotesClient {
   async save(note: any, name: string) {
@@ -25,9 +26,7 @@ export class NotesClient {
 
   async get<T=string>(name: string): Promise<T | null> {
     const headers = new Headers();
-    if (SettingsState.stored.notesApiKey) {
-      headers.set('x-api-key', SettingsState.stored.notesApiKey);
-    }
+    headers.set('x-token', ApiToken());
     const result = await fetch(`${Config.notesDomain}/notes/${encodeURIComponent(name)}`, {
       method: "GET",
       credentials: "omit",
