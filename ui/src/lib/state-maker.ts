@@ -1,7 +1,7 @@
-import { observable, observe } from '/mobx.js'
-import { observer } from '/mobx-react.js'
-import { ReactElement, Component } from '/react.js'
-import {Debounced} from './debouncer.js';
+import { observable, observe } from 'mobx'
+import { observer } from 'mobx-react'
+import { ReactElement, Component } from 'react'
+import {Debounced} from './debouncer';
 
 type HoC<P> = (props: P) => ReactElement
 

@@ -1,7 +1,7 @@
-import React, { Fragment } from '/react.js'
-import { LinearProgress, Box } from '/@material-ui/core.js'
-import { MakeStateful } from "../lib/state-maker.js";
-import { NoteTakerTheme } from '../lib/theme.js';
+import React, { Fragment } from 'react'
+import { LinearProgress, Box } from '@material-ui/core'
+import { MakeStateful } from "../lib/state-maker";
+import { NoteTakerTheme } from '../lib/theme';
 
 export const {
   component: LoadingBar,

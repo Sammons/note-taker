@@ -1,8 +1,8 @@
-import React, { Fragment } from "/react.js"
-import { Card, CardHeader, CardContent, TextField, Grid, Button } from "/@material-ui/core.js"
-import { MakeStateful } from "../lib/state-maker.js"
-import { Debounced } from "../lib/debouncer.js"
-import { LoadingBar, LoadingBarState } from "../components/loading-bar.js"
+import React, { Fragment } from "react"
+import { Card, CardHeader, CardContent, TextField, Grid, Button } from "@material-ui/core"
+import { MakeStateful } from "../lib/state-maker"
+import { Debounced } from "../lib/debouncer"
+import { LoadingBar, LoadingBarState } from "../components/loading-bar"
 
 export const {
    component: Settings,

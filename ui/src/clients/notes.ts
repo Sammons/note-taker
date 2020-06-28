@@ -1,7 +1,7 @@
-import {observable, set, action, computed} from '/mobx.js';
-import { NotesClient } from './notes-client.js';
-import { LoadingBar, LoadingBarState } from '../components/loading-bar.js';
-import { LinkShrinkClient } from './link-shrink-client.js';
+import {observable, set, action, computed} from 'mobx';
+import { NotesClient } from './notes-client';
+import { LoadingBar, LoadingBarState } from '../components/loading-bar';
+import { LinkShrinkClient } from './link-shrink-client';
 
 
 class _Notes {

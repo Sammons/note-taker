@@ -1,7 +1,7 @@
-import React, { Fragment, ReactElement } from '/react.js'
-import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, makeStyles } from '/@material-ui/core.js'
-import { Settings as SettingsIcon } from '/@material-ui/icons.js'
-import { MakeStateful } from '../lib/state-maker.js';
+import React, { Fragment, ReactElement } from 'react'
+import { Drawer, List, Divider, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core'
+import { Settings as SettingsIcon } from '@material-ui/icons'
+import { MakeStateful } from '../lib/state-maker';
 
 const styles = makeStyles({
   fullList: {

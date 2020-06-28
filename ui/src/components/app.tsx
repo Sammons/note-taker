@@ -1,18 +1,18 @@
-import React from '/react.js'
-import { Container, ThemeProvider, AppBar, Toolbar, IconButton, ListItem, ListItemIcon, ListItemText } from '/@material-ui/core.js'
-import { Menu, Edit, Home, Info } from '/@material-ui/icons.js'
-import { MuiPickersUtilsProvider } from '/@material-ui/pickers.js'
-import { NoteTakerTheme } from '../lib/theme.js'
-import { MakeStateful } from '../lib/state-maker.js';
-import { MdEditor } from './md-editor.js';
-import LuxonMuiAdapter from '/@date-io/luxon.js'
-import { Settings } from '../components/settings.js'
-import { LoadingBar } from '../components/loading-bar.js';
-import { About } from './about.js'
-import { Dashboard } from './dashboard.js'
-import { LeftNav, LeftNavState } from './left-nav.js'
-import { NoteEditor } from './note-editor.js'
-import { ListEditor } from './list-editor.js'
+import React from 'react'
+import { Container, ThemeProvider, AppBar, Toolbar, IconButton, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import { Menu, Edit, Home, Info } from '@material-ui/icons'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import { NoteTakerTheme } from '../lib/theme'
+import { MakeStateful } from '../lib/state-maker';
+import { MdEditor } from './md-editor';
+import LuxonMuiAdapter from '@date-io/luxon'
+import { Settings } from '../components/settings'
+import { LoadingBar } from '../components/loading-bar';
+import { About } from './about'
+import { Dashboard } from './dashboard'
+import { LeftNav, LeftNavState } from './left-nav'
+import { NoteEditor } from './note-editor'
+import { ListEditor } from './list-editor'
 
 const MainContainerNavigationMap = {
   'dashboard': Dashboard,

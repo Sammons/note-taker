@@ -1,5 +1,5 @@
-import { Config } from "../config/client-config.js";
-import { Settings, SettingsState } from "../components/settings.js";
+import { Config } from "../config/client-config";
+import { Settings, SettingsState } from "../components/settings";
 
 export class NotesClient {
   async save(note: any, name: string) {

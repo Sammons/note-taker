@@ -1,16 +1,16 @@
-import React, { Component, Fragment } from '/react.js';
-import marked from '/marked.js'
-import prism from '/prismjs.js'
-import { TextField, makeStyles, createMuiTheme, ThemeProvider, Fab, Grid, Dialog, DialogContent } from '/@material-ui/core.js';
-import { DateRangeOutlined, WatchOutlined, SaveOutlined, ShareOutlined, SyncOutlined } from '/@material-ui/icons.js';
-import { DatePicker, DateTimePicker } from '/@material-ui/pickers.js';
-import { LoadingBarState } from "../components/loading-bar.js"
-import { Debounced } from '../lib/debouncer.js';
-import { NotesClient } from '../clients/notes-client.js';
-import { Notes } from '../clients/notes.js';
-import { when } from '/mobx.js';
-import { observer } from '/mobx-react.js';
-import { MakeStateful } from '../lib/state-maker.js';
+import React, { Component, Fragment } from 'react';
+import marked from 'marked'
+import prism from 'prismjs'
+import { TextField, makeStyles, createMuiTheme, ThemeProvider, Fab, Grid, Dialog, DialogContent } from '@material-ui/core';
+import { DateRangeOutlined, WatchOutlined, SaveOutlined, ShareOutlined, SyncOutlined } from '@material-ui/icons';
+import { DatePicker, DateTimePicker } from '@material-ui/pickers';
+import { LoadingBarState } from "../components/loading-bar"
+import { Debounced } from '../lib/debouncer';
+import { NotesClient } from '../clients/notes-client';
+import { Notes } from '../clients/notes';
+import { when } from 'mobx';
+import { observer } from 'mobx-react';
+import { MakeStateful } from '../lib/state-maker';
 
 marked.setOptions({
   highlight: function (code, language) {

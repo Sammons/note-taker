@@ -1,5 +1,6 @@
-import React, { Fragment } from '/react.js';
-import { Card, CardHeader, CardContent, Typography } from '/@material-ui/core.js'
+import React, { Fragment } from 'react';
+import { Card, CardHeader, CardContent, Typography } from '@material-ui/core';
+
 
 export const About = () => {
   return <Fragment>

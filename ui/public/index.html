@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Notes (v2)</title>
+  <script>
+    const checkAuth = () => {
+      const cookies = document.cookie.split(/[;]/gm).filter(Boolean).reduce((a,b) => {const [k, v] = b.split('='); a[String(k).trim()] = String(v).trim(); return a;} ,{})
+      try {
+        const exp = new Date(JSON.parse(atob(cookies.access_token.split('.')[1])).exp * 1000).getTime();
+        if (exp < Date.now()) {
+          window.location.href = 'login.html';
+        }
+      } catch (e) {
+        // doesn't matter, invalid token
+      }
+      if (!cookies.access_token) {
+        document.cookie = `hash_value=${window.location.hash};path=/;`;
+        window.location.href = 'login.html';
+      } else {
+        if (cookies.hash_value) {
+          window.location.hash = cookies.hash_value;
+          document.cookie = `hash_value=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+        }
+      }
+    }
+    setInterval(checkAuth, 5000)
+    checkAuth()
+  </script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/note-taker/app.js"></script>
+</body>
+</body>
+</html>

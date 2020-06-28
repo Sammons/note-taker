@@ -1,5 +1,5 @@
-import { createMuiTheme } from '/@material-ui/core.js';
-import {colors, responsiveFontSizes} from '/@material-ui/core.js';
+import { createMuiTheme } from '@material-ui/core';
+import {colors, responsiveFontSizes} from '@material-ui/core';
 
 export const NoteTakerTheme = responsiveFontSizes(createMuiTheme({
   palette: {

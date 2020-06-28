@@ -1,10 +1,10 @@
-import React, {Fragment} from '/react.js';
-import {render} from '/react-dom.js';
-import {App} from './components/app.js';
-import {NoteTakerTheme} from './lib/theme.js';
-import {ThemeProvider} from '/@material-ui/core.js';
-
-import {observerBatching} from '/mobx-react.js'
+import React, {Fragment} from 'react';
+import {render} from 'react-dom';
+import {App} from './components/app';
+import {NoteTakerTheme} from './lib/theme';
+import {ThemeProvider} from '@material-ui/core';
+import 'prismjs/themes/prism.css'
+import {observerBatching} from 'mobx-react'
 observerBatching() // https://github.com/mobxjs/mobx-react-lite/#observer-batching
 
 const rootComponent = document.getElementById('root');

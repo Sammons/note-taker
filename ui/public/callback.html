@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Successfully Signed in!</title>
+  <script>
+    const hashParams = window.location.hash.split(/[&#]/gm).filter(Boolean).reduce((a,b) => {const [k, v] = b.split('='); a[k] = v; return a;} ,{})
+    console.log(hashParams)
+    document.cookie = `access_token=${hashParams.access_token};domain=.sammons.io;`
+    const cookies = document.cookie.split(/[;]/gm).filter(Boolean).reduce((a,b) => {const [k, v] = b.split('='); a[String(k).trim()] = String(v).trim(); return a;} ,{})
+    if (cookies.hash_value) {
+      window.location.href = `/${cookies.hash_value}`
+    } else {
+      window.location.href = '/'
+    }
+  </script>
+</head>
+<body>
+  Loading...
+</body>
+</html>

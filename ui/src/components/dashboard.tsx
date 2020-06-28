@@ -1,5 +1,5 @@
-import React from '/react.js'
-import { Card, CardHeader, CardContent, Typography } from '/@material-ui/core.js'
+import React from 'react'
+import { Card, CardHeader, CardContent, Typography } from '@material-ui/core'
 
 
 export const Dashboard = () => {

@@ -1,11 +1,11 @@
-import React from '/react.js'
-import { Container } from '/@material-ui/core.js'
-import { NoteTakerTheme } from '../lib/theme.js'
-import { MakeStateful } from '../lib/state-maker.js';
-import { MdEditor } from './md-editor.js';
-import { Settings } from '../components/settings.js'
-import { About } from './about.js'
-import { Dashboard } from './dashboard.js'
+import React from 'react'
+import { Container } from '@material-ui/core'
+import { NoteTakerTheme } from '../lib/theme'
+import { MakeStateful } from '../lib/state-maker';
+import { MdEditor } from './md-editor';
+import { Settings } from '../components/settings'
+import { About } from './about'
+import { Dashboard } from './dashboard'
 
 const MainContainerNavigationMap = {
   'dashboard': Dashboard,

@@ -1,14 +1,14 @@
-import React, { Component, Fragment, RefObject, useEffect } from '/react.js';
-import { Debounced } from '../lib/debouncer.js';
-import { TextField, Grid, Container, Fab, Dialog, DialogContent } from '/@material-ui/core.js';
-import { MakeStateful } from '../lib/state-maker.js';
-import { InjectableTextField } from './note-editor-subcomponents/injectable-text-field.js';
-import { SaveOutlined, SyncOutlined, ShareOutlined } from '/@material-ui/icons.js';
-import { NotesClient } from '../clients/notes-client.js';
-import { LoadingBarState } from './loading-bar.js';
-import { Notes } from '../clients/notes.js';
-import { observer } from '/mobx-react.js';
-import { Markdown } from './note-editor-subcomponents/markdown.js';
+import React, { Component, Fragment, RefObject, useEffect } from 'react';
+import { Debounced } from '../lib/debouncer';
+import { TextField, Grid, Container, Fab, Dialog, DialogContent } from '@material-ui/core';
+import { MakeStateful } from '../lib/state-maker';
+import { InjectableTextField } from './note-editor-subcomponents/injectable-text-field';
+import { SaveOutlined, SyncOutlined, ShareOutlined } from '@material-ui/icons';
+import { NotesClient } from '../clients/notes-client';
+import { LoadingBarState } from './loading-bar';
+import { Notes } from '../clients/notes';
+import { observer } from 'mobx-react';
+import { Markdown } from './note-editor-subcomponents/markdown';
 
 const InputFieldComponent = (props: {
   label: string;

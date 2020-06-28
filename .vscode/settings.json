@@ -6,7 +6,8 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "node_modules/**/*": true,
-    "web_modules/*": false
+    "web_modules/*": false,
+    ".build": true,
   },
   "typescript.tsserver.maxTsServerMemory": 8192,
   "typescript.tsserver.watchOptions": {

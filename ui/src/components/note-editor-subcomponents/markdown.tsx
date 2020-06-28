@@ -1,7 +1,7 @@
-import React, {  } from '/react.js';
-import marked from '/marked.js'
-import prism from '/prismjs.js'
-import { makeStyles } from '/@material-ui/core.js';
+import React, {  } from 'react';
+import marked from 'marked'
+import prism from 'prismjs'
+import { makeStyles } from '@material-ui/core';
 
 marked.setOptions({
   highlight: function (code, language) {

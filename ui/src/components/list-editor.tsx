@@ -1,13 +1,13 @@
-import React, { useEffect, Fragment } from '/react.js';
-import { Grid, Container, TextField, Fab, Dialog, DialogContent, ListItem, List, IconButton, ListItemIcon, Checkbox, ListItemText, ListItemSecondaryAction, Divider, Typography } from '/@material-ui/core.js';
-import { MakeStateful } from '../lib/state-maker.js';
-import { Debounced } from '../lib/debouncer.js';
-import { NotesClient } from '../clients/notes-client.js';
-import { LoadingBarState } from './loading-bar.js';
-import { SaveOutlined, SyncOutlined, ShareOutlined, Add, Delete } from '/@material-ui/icons.js';
-import { observer } from '/mobx-react.js';
-import { Notes } from '../clients/notes.js';
-import { Autocomplete } from '/@material-ui/lab.js'
+import React, { useEffect, Fragment, useState } from 'react';
+import { Grid, Container, TextField, Fab, Dialog, DialogContent, ListItem, List, IconButton, ListItemIcon, Checkbox, ListItemText, ListItemSecondaryAction, Divider, Typography } from '@material-ui/core';
+import { MakeStateful } from '../lib/state-maker';
+import { Debounced } from '../lib/debouncer';
+import { NotesClient } from '../clients/notes-client';
+import { LoadingBarState } from './loading-bar';
+import { SaveOutlined, SyncOutlined, ShareOutlined, Add, Delete } from '@material-ui/icons';
+import { observer } from 'mobx-react';
+import { Notes } from '../clients/notes';
+import { Autocomplete } from '@material-ui/lab'
 
 const options = [
   "Almonds",
@@ -74,7 +74,9 @@ const InputFieldComponent = (props: {
     value={props.value}
     onChange={e => {
       const value = e.target.value;
+      console.log('changed')
       Debounced('list-editor-input-field-component', () => {
+        console.log('change applying')
         props.onChange(value);
       });
     }}
@@ -89,6 +91,8 @@ const loadNote = () => {
       )
     if (value != null) {
       ListEditorState.transient.localContent = value
+    } else {
+      ListEditorState.transient.localContent = { elements: [] }
     }
   })
 }
@@ -106,7 +110,7 @@ const save = () => {
 const NoteListItem = (props: { idx: number; text: string; checked: boolean; }) => {
   return <Fragment>
     <ListItem dense>
-      <ListItemIcon style={{height: 26}}>
+      <ListItemIcon style={{ height: 26 }}>
         <Typography>{props.idx}</Typography>
         <Checkbox edge="start"
           disableRipple
@@ -211,13 +215,13 @@ export const {
     newEntryValue: ""
   },
   () => {
-    if (!ListEditorState.nav.noteName) {
-      ListEditorState.nav.noteName = new Date().toLocaleDateString()
-    } else {
-      useEffect(() => {
+    useEffect(() => {
+      if (!ListEditorState.nav.noteName) {
+        ListEditorState.nav.noteName = new Date().toLocaleDateString()
+      } else {
         loadNote();
-      }, []);
-    }
+      }
+    }, [ListEditorState.nav.noteName]);
 
     return <Container disableGutters={false}>
       {/* Name field */}
@@ -231,7 +235,7 @@ export const {
             label="name"
             value={ListEditorState.nav.noteName}
             onChange={(value) => {
-              ListEditorState.nav.noteName = value 
+              ListEditorState.nav.noteName = value
             }}
           />
         </Grid>

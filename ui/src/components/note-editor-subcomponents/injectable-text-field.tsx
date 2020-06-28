@@ -1,6 +1,6 @@
-import React, { } from '/react.js'
-import { TextField } from '/@material-ui/core.js'
-import { Debounced } from '../../lib/debouncer.js';
+import React, { } from 'react'
+import { TextField } from '@material-ui/core'
+import { Debounced } from '../../lib/debouncer';
 
 type PropType = {
   value: string;
