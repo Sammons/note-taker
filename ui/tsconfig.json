@@ -8,6 +8,7 @@
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "inlineSources": true,
     "outDir": "tsc-built",
     "rootDir": "src"
   }

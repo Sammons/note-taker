@@ -1,3 +1,5 @@
+require('source-map-support').install()
+
 module.exports = {
   "scripts": {
     "mount:src": "mount src --to /note-taker",
@@ -9,7 +11,11 @@ module.exports = {
   ],
   installOptions: {
     treeshake: true,
-    installTypes: true
+    installTypes: true,
+    sourceMap: true
+  },
+  "devOptions": {
+    "secure": true
   },
   "install": [
   //   "react",

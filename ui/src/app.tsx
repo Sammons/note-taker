@@ -1,9 +1,9 @@
+import 'prismjs/themes/prism.css'
 import React, {Fragment} from 'react';
 import {render} from 'react-dom';
 import {App} from './components/app';
 import {NoteTakerTheme} from './lib/theme';
 import {ThemeProvider} from '@material-ui/core';
-import 'prismjs/themes/prism.css'
 import {observerBatching} from 'mobx-react'
 observerBatching() // https://github.com/mobxjs/mobx-react-lite/#observer-batching
 

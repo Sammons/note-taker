@@ -4,3 +4,5 @@ yarn-error.log
 build
 .build
 .DS_Store
+*.crt
+*.key

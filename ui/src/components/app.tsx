@@ -82,7 +82,7 @@ export const App = () => {
       </AppBar>
       <LoadingBar />
       <LeftNav navigate={navigate as (t: string) => void} items={navConfig.map(C => (
-        <ListItem button onClick={() => {
+        <ListItem key={C.name} button onClick={() => {
           navigate(C.selection)
           toggleNav()
         }}>
