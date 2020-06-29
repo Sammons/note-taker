@@ -8,7 +8,7 @@ module.exports = {
     "@snowpack/plugin-parcel"
   ],
   installOptions: {
-    treeshake: true,
+    treeshake: false,
     installTypes: true,
     sourceMap: true
   },
