@@ -6,8 +6,24 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
+  <link rel="manifest" href="manifest.json">
+  <!-- ios PWA stuff -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Sammons Notes">
+  <meta name="theme-color" content="#FFF" />
+  <link rel="apple-touch-icon" href="images/Logo_152x152.png">
+  <!-- extra PWA meta tags -->
+  <meta name="description" content="A custom app for Sammons family members">
   <title>Notes (v2)</title>
   <script>
+    /// service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+      })
+    }
+    /// auth
     const checkAuth = () => {
       const cookies = document.cookie.split(/[;]/gm).filter(Boolean).reduce((a,b) => {const [k, v] = b.split('='); a[String(k).trim()] = String(v).trim(); return a;} ,{})
       try {

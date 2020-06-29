@@ -8,7 +8,8 @@
   <meta http-equiv="Expires" content="0" />
   <title>Redirecting to login page</title>
   <script>
-    window.location.href = 'https://sammonsio-notes.auth.us-east-1.amazoncognito.com/login?client_id=150o7qruqkbqf0jokim25sgcob&response_type=token&scope=openid&redirect_uri=https://notes.sammons.io/callback.html'
+    const callbackUrl = window.location.host.includes('localhost') ? 'https://localhost:8080/callback.html' : 'https://notes.sammons.io/callback.html'
+    window.location.href = 'https://sammonsio-notes.auth.us-east-1.amazoncognito.com/login?client_id=150o7qruqkbqf0jokim25sgcob&response_type=token&scope=openid&redirect_uri=' + callbackUrl
   </script>
 </head>
 <body>

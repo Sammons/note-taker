@@ -1,5 +1,3 @@
-require('source-map-support').install()
-
 module.exports = {
   "scripts": {
     "mount:src": "mount src --to /note-taker",
@@ -14,21 +12,8 @@ module.exports = {
     installTypes: true,
     sourceMap: true
   },
-  "devOptions": {
-    "secure": true
-  },
+  "devOptions": {},
   "install": [
-  //   "react",
-  //   "react-dom",
-  //   "mobx",
-  //   "mobx-react",
-  //   // "@material-ui/core",
-  //   // "@material-ui/icons",
-  //   // "@material-ui/pickers",
-  //   // "@material-ui/lab",
-  //   "@date-io/luxon",
-  //   "marked",
-  //   "prismjs",
     "prismjs/themes/prism.css"
   ]
 }

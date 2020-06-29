@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, ThemeProvider, AppBar, Toolbar, IconButton, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
-import { Menu, Edit, Home, Info } from '@material-ui/icons'
+import { Menu, Edit, Home, Info, AccountBalanceWallet } from '@material-ui/icons'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { NoteTakerTheme } from '../lib/theme'
 import { MakeStateful } from '../lib/state-maker';
@@ -55,8 +55,8 @@ const navConfig = [
     selection: "about"
   },
   {
-    name: "MD Editor",
-    icon: Edit,
+    name: "Bank Dashboard",
+    icon: AccountBalanceWallet,
     selection: 'md-editor'
   },
   {
