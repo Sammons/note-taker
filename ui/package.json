@@ -3,7 +3,6 @@
     "spi": "snowpack install",
     "sp": "snowpack build",
     "dev": "snowpack dev",
-    "sp-prod": "snowpack --optimize",
     "publish": "aws s3 cp ./build s3://sammons-io-note-taker/2 --recursive",
     "gen-dev-keys": "openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout snowpack.key -out snowpack.crt"
   },

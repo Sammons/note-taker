@@ -1,13 +1,10 @@
 import { Config } from "../config/client-config";
-import { SettingsState } from "../components/settings";
 import { ApiToken } from "./authorization";
 
 export class NotesClient {
   async save(note: any, name: string) {
     const headers = new Headers();
-    if (SettingsState.stored.notesApiKey) {
-      headers.set('x-api-key', SettingsState.stored.notesApiKey);
-    }
+    headers.set('x-token', ApiToken());
     const result = await fetch(`${Config.notesDomain}/notes`, {
       method: "POST",
       credentials: "omit",

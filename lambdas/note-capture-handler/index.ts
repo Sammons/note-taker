@@ -39,7 +39,7 @@ module.exports.handler = new LambdaHandler({
         body:{ success: true }
       } as const;
     }
-    element.values.push({timestamp: Date.now(), value: valueToSave});
+    element.values = [{timestamp: Date.now(), value: valueToSave}]
     await notes.save([element])
     return {
       statusCode: 200,
