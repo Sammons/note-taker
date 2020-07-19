@@ -12,3 +12,5 @@ if (rootComponent) {
 } else {
   console.log("Failed to find root DOM element")
 }
+
+import './lib/messaging';

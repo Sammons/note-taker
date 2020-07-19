@@ -6,6 +6,7 @@
     "publish-handler-write": "aws lambda update-function-code --region=us-east-1 --function-name note-capture --zip-file fileb://writehandler.zip --publish",
     "publish-handler-read": "aws lambda update-function-code --region=us-east-1 --function-name note-lookup --zip-file fileb://readhandler.zip --publish",
     "publish-handler-recents": "aws lambda update-function-code --region=us-east-1 --function-name note-recents --zip-file fileb://recentshandler.zip --publish",
+    "publish-handler-config": "aws lambda update-function-code --region=us-east-1 --function-name note-app-config --zip-file fileb://confighandler.zip --publish",
     "apply-path-to-stage-mapping": "aws apigatewayv2 create-api-mapping --region=us-east-1 --domain-name='note-api.sammons.io' --api-id=6gk6drmy8b --stage=prod",
     "test": "curl -X POST https://notes-api.sammons.io/notes -d '{\"name\": \"x\", \"note\":{}}'",
     "test2": "curl -X GET https://notes-api.sammons.io/notes/x"

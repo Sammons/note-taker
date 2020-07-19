@@ -78,4 +78,19 @@ export class NotesClient {
     console.log('failed to fetch recents');
     return [];
   }
+
+  async settings(): Promise<{fcmKey: string; firebaseApp: {};}> {
+    const headers = new Headers();
+    headers.set('x-token', ApiToken());
+    const result = await fetch(`${Config.notesDomain}/settings`, {
+      method: "GET",
+      credentials: "omit",
+      headers: headers
+    });
+    if (!(result.status >= 200 && result.status < 300)) {
+      throw new Error(`Bad status ${result.status} when fetching settings.`);
+    }
+    const body = await result.json() as { value: any };
+    return body.value;
+  }
 }
