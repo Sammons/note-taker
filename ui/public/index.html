@@ -17,6 +17,11 @@
   <meta name="description" content="A custom app for Sammons family members">
   <title>Notes (v2)</title>
   <script>
+    // fixes mobx
+    if (window.process == null) {
+      window.process = { env: {NODE_ENV: 'production'} }
+    }
+
     /// service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -58,8 +63,6 @@
 <body>
   <div id="root"></div>
 </body>
-<script src="web_modules/react.js"></script>
-<script src="web_modules/react-dom.js"></script>
-<script async src="/note-taker/app.js"></script>
+<script type="module" src="/note-taker/app.js"></script>
 </body>
 </html>

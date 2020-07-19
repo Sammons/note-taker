@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "mount:public": "mount public --to /",
+    "mount:src": "mount src --to /note-taker"
+  },
+  "plugins": [
+    "@snowpack/plugin-babel",
+    "@snowpack/plugin-parcel"
+  ],
+  "installOptions": {
+    "treeshake": false,
+    "installTypes": true,
+    "sourceMap": true
+  },
+  "buildOptions": {
+    "minify": false,
+    "watch": true
+  },
+  "devOptions": {
+    "bundle": true,
+    "secure": true
+  },
+  "install": [
+    "prismjs/themes/prism.css"
+  ]
+}

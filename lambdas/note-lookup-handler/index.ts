@@ -3,6 +3,14 @@ import {DynamoDB} from 'aws-sdk';
 
 const notes = new DynamoSlim('notes', new DynamoDB({apiVersion: '2012-08-10'}));
 
+const tenants = new DynamoSlim('tenants', new DynamoDB({apiVersion: '2012-08-10'}));
+const getTenant = async(event: any) => {
+  const currentTenant = await tenants.get({
+    username: event.requestContext.authorizer.claims.username
+  });
+  return currentTenant?.tenantId
+}
+
 module.exports.handler = new LambdaHandler({
   method: 'get',
   project: 'NoteTaker',
@@ -22,7 +30,11 @@ module.exports.handler = new LambdaHandler({
     if (!name) {
       throw new Error('missing name param');
     }
-    const element = await notes.get({ name: name })
+    const tenantId = await getTenant(event);
+    if (!tenantId) {
+      throw new Error(`tenant not found`);
+    }
+    const element = await notes.get({ name: name, tenantId: tenantId })
     if (!element) {
       return {
         statusCode: 404,
