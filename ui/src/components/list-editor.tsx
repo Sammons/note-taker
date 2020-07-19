@@ -8,6 +8,7 @@ import { SaveOutlined, SyncOutlined, ShareOutlined, Add, Delete } from '@materia
 import { observer } from 'mobx-react';
 import { Notes } from '../clients/notes';
 import { Autocomplete } from '@material-ui/lab'
+import { ReloadCurrentNote } from 'src/lib/reload-current-note';
 
 const options = [
   "Almonds",
@@ -83,20 +84,6 @@ const InputFieldComponent = (props: {
     fullWidth />
 }
 
-const loadNote = () => {
-  LoadingBarState.transient.enqueue(async () => {
-    const value = await new NotesClient()
-      .get<typeof ListEditorState.transient['localContent']>(
-        `list-${ListEditorState.nav.noteName}`
-      )
-    if (value != null) {
-      ListEditorState.transient.localContent = value
-    } else {
-      ListEditorState.transient.localContent = { elements: [] }
-    }
-  })
-}
-
 const save = () => {
   LoadingBarState.transient.enqueue(async () => {
     await new NotesClient()
@@ -162,7 +149,7 @@ const NoteListArea = observer(() => {
         </Grid>
         <Grid item>
           <Fab><SyncOutlined onClick={() => {
-            loadNote();
+            ReloadCurrentNote();
           }} /></Fab>
         </Grid>
         <Grid item>
@@ -218,10 +205,9 @@ export const {
     useEffect(() => {
       if (!ListEditorState.nav.noteName) {
         ListEditorState.nav.noteName = new Date().toLocaleDateString()
-      } else {
-        loadNote();
       }
-    }, [ListEditorState.nav.noteName]);
+      ReloadCurrentNote();
+    }, []);
 
     return <Container disableGutters={false}>
       {/* Name field */}
@@ -232,7 +218,7 @@ export const {
       >
         <Grid item xs={12}>
           <InputFieldComponent
-            label="name"
+            label="List Name"
             value={ListEditorState.nav.noteName}
             onChange={(value) => {
               ListEditorState.nav.noteName = value
@@ -280,7 +266,7 @@ export const {
           </Grid>
         </Grid>
         {/* actual note textfield, and right action bar */}
-        <Grid item xs={12} spacing={0}>
+        <Grid item xs={12}>
           <NoteListArea />
         </Grid>
       </Grid>

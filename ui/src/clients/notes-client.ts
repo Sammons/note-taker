@@ -21,7 +21,7 @@ export class NotesClient {
     }
   }
 
-  async get<T=string>(name: string): Promise<T | null> {
+  async get<T = string>(name: string): Promise<T | null> {
     const headers = new Headers();
     headers.set('x-token', ApiToken());
     const result = await fetch(`${Config.notesDomain}/notes/${encodeURIComponent(name)}`, {
@@ -41,7 +41,41 @@ export class NotesClient {
       if (lastResult != null) {
         return JSON.parse(lastResult.value) as T;
       }
-    } 
+    }
     return null;
+  }
+
+  async recents() {
+    const headers = new Headers();
+    headers.set('x-token', ApiToken());
+    const result = await fetch(`${Config.notesDomain}/notes/recent-notes`, {
+      method: "GET",
+      credentials: "omit",
+      headers: headers
+    });
+    const body = await result.json() as {
+      value: {
+        values: { value: string; timestamp: string }[];
+        createdAt: string;
+        name: string;
+        lastUpdatedBy: string;
+        lastUpdatedAt: number;
+      }[]
+    }
+    if (result.status >= 200 && result.status < 300) {
+      return body.value.map(el => {
+        const rawName = decodeURIComponent(el.name);
+        const type = rawName.startsWith('list-') ? 'list' : 'md';
+        return {
+          name: type === 'list' ? rawName.slice('list-'.length) : rawName.slice('md-'.length),
+          type,
+          lastUpdatedAt: el.lastUpdatedAt,
+          lastUpdatedBy: el.lastUpdatedBy,
+          value: JSON.parse(el.values[0].value),
+        }
+      });
+    }
+    console.log('failed to fetch recents');
+    return [];
   }
 }

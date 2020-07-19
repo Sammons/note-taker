@@ -13,6 +13,7 @@ import { Dashboard } from './dashboard'
 import { LeftNav, LeftNavState } from './left-nav'
 import { NoteEditor } from './note-editor'
 import { ListEditor } from './list-editor'
+import { CurrentNavigation, Navigation } from 'src/lib/navigation'
 
 const MainContainerNavigationMap = {
   'dashboard': Dashboard,
@@ -27,21 +28,16 @@ const {
   state: MainContainerState
 } = MakeStateful(
   'main',
-  {
-    target: 'dashboard' as keyof typeof MainContainerNavigationMap
-  },
+  {},
   {},
   {},
   () => {
-    const Target = MainContainerNavigationMap[MainContainerState.nav.target || 'dashboard'];
+    const key = (CurrentNavigation.nav.target || 'dashboard') as any as keyof typeof MainContainerNavigationMap;
+    const Target = MainContainerNavigationMap[key] || MainContainerNavigationMap['dashboard'];
     return <Container disableGutters={true} style={{ padding: NoteTakerTheme.spacing(1) }}>
       <Target />
     </Container>
   });
-
-const navigate = (selection: keyof typeof MainContainerNavigationMap) => {
-  MainContainerState.nav.target = selection || 'dashboard';
-}
 
 const navConfig = [
   {
@@ -81,9 +77,9 @@ export const App = () => {
         </Toolbar>
       </AppBar>
       <LoadingBar />
-      <LeftNav navigate={navigate as (t: string) => void} items={navConfig.map(C => (
+      <LeftNav navigate={Navigation.navigate} items={navConfig.map(C => (
         <ListItem key={C.name} button onClick={() => {
-          navigate(C.selection)
+          Navigation.navigate(C.selection)
           toggleNav()
         }}>
           <ListItemIcon>

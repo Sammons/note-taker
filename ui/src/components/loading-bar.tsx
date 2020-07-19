@@ -10,7 +10,9 @@ export const {
   events: 0,
   enqueue: (fun: () => Promise<any>) => {
     LoadingBarState.transient.events++;
-    fun().finally(() => {
+    fun().catch(e => {
+      console.log('loading failure!', e)
+    }).finally(() => {
       LoadingBarState.transient.events--;
     });
   }

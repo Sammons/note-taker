@@ -6,9 +6,9 @@ import { InjectableTextField } from './note-editor-subcomponents/injectable-text
 import { SaveOutlined, SyncOutlined, ShareOutlined } from '@material-ui/icons';
 import { NotesClient } from '../clients/notes-client';
 import { LoadingBarState } from './loading-bar';
-import { Notes } from '../clients/notes';
 import { observer } from 'mobx-react';
 import { Markdown } from './note-editor-subcomponents/markdown';
+import { LinkShrinkClient } from 'src/clients/link-shrink-client';
 
 const InputFieldComponent = (props: {
   label: string;
@@ -67,19 +67,23 @@ const NoteTextArea = observer(() => {
         <Grid item>
           <Fab onClick={() => {
             NoteEditorState.transient.shareModal = true;
+            new LinkShrinkClient().shrink(window.location.href).then(shortLink => {
+              NoteEditorState.transient.shortLink = shortLink;
+            })
           }}>
             <ShareOutlined />
           </Fab>
           {NoteEditorState.transient.shareModal && <Dialog
-            open={NoteEditorState.transient.shareModal && Boolean(Notes.genLink())}
+            open={NoteEditorState.transient.shareModal && Boolean(NoteEditorState.transient.shortLink)}
             onClose={() => {
+              NoteEditorState.transient.shortLink = "";
               NoteEditorState.transient.shareModal = false;
             }}
             maxWidth={"md"}
             fullWidth>
             <DialogContent>
               <TextField
-                defaultValue={Notes.genLink()}
+                defaultValue={NoteEditorState.transient.shortLink}
                 label={"Copy the link"}
                 fullWidth />
             </DialogContent>
@@ -95,7 +99,7 @@ export const { component: NoteEditor, state: NoteEditorState } = MakeStateful(
   'note-editor',
   { noteName: "" },
   {},
-  { localContent: "", shareModal: false },
+  { localContent: "", shareModal: false, shortLink: "" },
   () => {
     if (!NoteEditorState.nav.noteName) {
       NoteEditorState.nav.noteName = new Date().toLocaleDateString()

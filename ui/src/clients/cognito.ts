@@ -10,7 +10,6 @@ const fetchUserInfo = (): Promise<UserInfo> => {
     headers: new Headers({
       Authorization: `Bearer ${ApiToken()}`
     }),
-    cache: 'only-if-cached',
     credentials: 'omit'
   }).then(res => {
     return res.json()

@@ -2,7 +2,7 @@ import { LambdaHandler, DynamoSlim } from 'lambda-toolkit-utilities'
 import {DynamoDB} from 'aws-sdk';
 
 const notes = new DynamoSlim('notes', new DynamoDB({apiVersion: '2012-08-10'}));
-const recentNotes = new DynamoSlim('recentNotes', new DynamoDB({apiVersion: '2012-08-10'}));
+const recentNotes = new DynamoSlim('recent-notes', new DynamoDB({apiVersion: '2012-08-10'}));
 const recentNoteTTL = 72 * 60 * 60 * 1000;
 const tenants = new DynamoSlim('tenants', new DynamoDB({apiVersion: '2012-08-10'}));
 const getTenant = async(event: any) => {
@@ -45,7 +45,7 @@ module.exports.handler = new LambdaHandler({
     if (valueToSave.length == 0) {
       throw new Error('blank document');
     }
-    const id =  + '---' + tenantId;
+    const id = name + '---' + tenantId;
     const element = await notes.get({ id: id }) || {
       id: id, 
       name: name,
@@ -63,12 +63,11 @@ module.exports.handler = new LambdaHandler({
     element.values = [{timestamp: Date.now(), value: valueToSave}]
     element.lastUpdatedBy = getUsername(event);
     element.lastUpdatedAt = Date.now();
-    await Promise.all([
-      notes.save([element]),
-      recentNotes.save([{
-        name, tenantId, ttl: Date.now() + recentNoteTTL
-      }])
-    ]);
+    // promise.all around these was giving odd behavior
+    await recentNotes.save([{
+      id, tenantId, ttl: Date.now() + recentNoteTTL
+    }]).catch(e => console.log(e));
+    await notes.save([element]);
     return {
       statusCode: 200,
       body: {
