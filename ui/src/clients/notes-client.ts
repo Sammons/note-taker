@@ -93,4 +93,20 @@ export class NotesClient {
     const body = await result.json() as { value: any };
     return body.value;
   }
+
+  async registerFCMToken(token: string): Promise<void> {
+    const headers = new Headers();
+    headers.set('x-token', ApiToken());
+    const result = await fetch(`${Config.notesDomain}/fcm-tokens`, {
+      method: "POST",
+      credentials: "omit",
+      body: JSON.stringify({
+        token: token
+      }),
+      headers: headers
+    });
+    if (!(result.status >= 200 && result.status < 300)) {
+      throw new Error(`Bad status ${result.status} when saving FCM token.`);
+    }
+  }
 }

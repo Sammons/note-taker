@@ -23,6 +23,7 @@ const registerTokenIfNeeded = async (messaging: ReturnType<typeof firebase['mess
   try {
     const token = await messaging.getToken();
     if (FCMState.stored.token != token) {
+      await new NotesClient().registerFCMToken(token)
       FCMState.stored.token = token
       console.log('new token', token)
     } else {
