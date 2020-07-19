@@ -45,8 +45,9 @@ module.exports.handler = new LambdaHandler({
     if (valueToSave.length == 0) {
       throw new Error('blank document');
     }
-
-    const element = await notes.get({ name: name, tenantId: tenantId }) || {
+    const id =  + '---' + tenantId;
+    const element = await notes.get({ id: id }) || {
+      id: id, 
       name: name,
       tenantId: tenantId,
       values: [],
@@ -64,9 +65,9 @@ module.exports.handler = new LambdaHandler({
     element.lastUpdatedAt = Date.now();
     await Promise.all([
       notes.save([element]),
-      recentNotes.save({
+      recentNotes.save([{
         name, tenantId, ttl: Date.now() + recentNoteTTL
-      })
+      }])
     ]);
     return {
       statusCode: 200,

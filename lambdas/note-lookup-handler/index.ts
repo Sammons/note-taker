@@ -34,7 +34,8 @@ module.exports.handler = new LambdaHandler({
     if (!tenantId) {
       throw new Error(`tenant not found`);
     }
-    const element = await notes.get({ name: name, tenantId: tenantId })
+    const id = name + '---' + tenantId
+    const element = await notes.get({ id })
     if (!element) {
       return {
         statusCode: 404,
