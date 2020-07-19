@@ -22,7 +22,7 @@
     "@types/react-dom": "^16.9.6",
     "parcel": "^1.12.4",
     "servor": "^3.2.0",
-    "snowpack": "^2.6.0",
+    "snowpack": "^2.6.4",
     "typescript": "^3.8.3"
   },
   "dependencies": {

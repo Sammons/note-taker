@@ -12,7 +12,11 @@ module.exports = {
     installTypes: true,
     sourceMap: true
   },
-  "devOptions": {},
+  buildOptions: {
+    minify: false,
+    watch: true
+  },
+  "devOptions": {secure: true},
   "install": [
     "prismjs/themes/prism.css"
   ]
