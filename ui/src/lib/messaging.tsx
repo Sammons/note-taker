@@ -58,22 +58,27 @@ export const Register = async () => {
       FCMState.stored.havePermission = true;
     }
     proceedWithPermission(settings.fcmKey, messaging)
-
-    const broadcast = new BroadcastChannel('fcm-settings');
-    let initialBroadcastCheck = setInterval(() => {
-      navigator.serviceWorker.getRegistrations().then(r => {
-        if (r.some(reg => reg.scope.includes('firebase-cloud-messaging-push-scope'))) {
-          if (initialBroadcastCheck) {
-            clearInterval(initialBroadcastCheck);
-            initialBroadcastCheck = null;
-            setTimeout(() => {
-              broadcast.postMessage(settings);
-              console.log('settings broadcast sent')
-            }, 15) // give time to establish broadcast channel
+    navigator.serviceWorker.addEventListener('message', event => {
+      console.log('message received')
+      // the only event our service worker sends is 'send over the config'
+      const broadcast = new BroadcastChannel('fcm-settings');
+      let initialBroadcastCheck = setInterval(() => {
+        navigator.serviceWorker.getRegistrations().then(r => {
+          if (r.some(reg => reg.scope.includes('firebase-cloud-messaging-push-scope'))) {
+            if (initialBroadcastCheck) {
+              clearInterval(initialBroadcastCheck);
+              setTimeout(() => {
+                broadcast.postMessage(settings);
+                console.log('settings broadcast sent')
+                initialBroadcastCheck = null;
+              }, 15) // give time to establish broadcast channel
+            }
+          } else {
+            console.log('waiting for service worker to come around');
           }
-        }
-      })
-    }, 200) as NodeJS.Timeout|null;
+        })
+      }, 200) as NodeJS.Timeout|null;
+    })
   } catch (e) {
     console.log(e)
   }

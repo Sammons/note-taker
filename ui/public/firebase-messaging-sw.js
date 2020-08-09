@@ -1,27 +1,36 @@
 try {
-  console.log('importing scripts')
-  importScripts(
-    'https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js',
-    'https://www.gstatic.com/firebasejs/7.16.1/firebase-messaging.js'
-  );
-  console.log('FCM service worker running')
+  function run() {
+    console.log('importing scripts')
+    importScripts(
+      'https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js',
+      'https://www.gstatic.com/firebasejs/7.16.1/firebase-messaging.js'
+    );
+    console.log('FCM service worker running')
 
-  const broadcast = new BroadcastChannel('fcm-settings');
-  let isregistered = false
-  broadcast.onmessage = (event) => {
-    if (event && !isregistered) {
-      console.log('initializing firebase in service worker')
-      firebase.initializeApp(event.data.firebaseApp);
-      const messaging = firebase.messaging();
-      messaging.usePublicVapidKey(event.data.fcmKey);
-      messaging.setBackgroundMessageHandler(payload => {
-        console.log('message received', payload)
-      })
-      isregistered = true;
-    } else {
-      console.log('already registered')
+    const broadcast = new BroadcastChannel('fcm-settings');
+    let isregistered = false
+    broadcast.onmessage = (event) => {
+      if (event && !isregistered) {
+        console.log('initializing firebase in service worker')
+        firebase.initializeApp(event.data.firebaseApp);
+        const messaging = firebase.messaging();
+        messaging.usePublicVapidKey(event.data.fcmKey);
+        messaging.setBackgroundMessageHandler(payload => {
+          console.log('message received', payload)
+        })
+        isregistered = true;
+      } else {
+        console.log('already registered')
+      }
     }
+
+    postMessage('send-over-the-config')
+  }
+  if (window == null) {
+    run();
+  } else {
+    console.log('not running firebase-messaging-sw since not in service worker')
   }
 } catch (e) {
-  console.log('failed',e)
+  // console.log('failed', e)
 }
