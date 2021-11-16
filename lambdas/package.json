@@ -14,7 +14,7 @@
     "test2": "curl -X GET https://notes-api.sammons.io/notes/x"
   },
   "dependencies": {
-    "aws-sdk": "^2.663.0",
+    "aws-sdk": "^2.814.0",
     "plaid": "^5.2.0"
   },
   "devDependencies": {
